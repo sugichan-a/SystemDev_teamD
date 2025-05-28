@@ -1,12 +1,12 @@
 import React from 'react';
 
-const [PageName] = () => {
+const StatsPage = () => {
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold">[ページタイトル]</h1>
-      <p className="text-gray-600">ここに[ページタイトル]の内容を追加します。</p>
+      <h1 className="text-2xl font-bold">ホーム</h1>
+      <p className="text-gray-600">ここに画面の内容を追加します。</p>
     </div>
   );
 };
 
-export default [PageName];
+export default StatsPage;
