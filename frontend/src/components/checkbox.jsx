@@ -1,27 +1,18 @@
-import React, { useState } from 'react';
+import React from "react";
 
-const Checkbox = ({ label, defaultChecked = false, onChange }) => {
-  const [checked, setChecked] = useState(defaultChecked);
-
-  const handleChange = (event) => {
-    const newChecked = event.target.checked;
-    setChecked(newChecked);
-    if (onChange) {
-      onChange(newChecked);
-    }
-  };
-
+function Checkbox({ label, checked, onChange, name }) {
   return (
-    <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+    <div className="flex items-center">
       <input
         type="checkbox"
+        className="mr-2"
         checked={checked}
-        onChange={handleChange}
-        style={{ marginRight: '8px' }}
+        onChange={onChange}
+        name={name}
       />
-      {label}
-    </label>
+      <label className="font-roboto text-gray-700">{label}</label>
+    </div>
   );
-};
+}
 
 export default Checkbox;

@@ -1,23 +1,14 @@
-// src/components/button.jsx
+import React from "react";
 
-function Button({ label, onClick }) {
+function Button({ onClick, children, className = "" }) {
   return (
     <button
       onClick={onClick}
-      style={{
-        padding: '0.6em 1.2em',
-        margin: '0.5em',
-        borderRadius: '8px',
-        border: '1px solid #ccc',
-        backgroundColor: '#1a1a1a',
-        color: '#fff',
-        cursor: 'pointer',
-        fontSize: '1em',
-      }}
+      className={`bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-roboto ${className}`}
     >
-      {label}
+      {children}
     </button>
-  )
+  );
 }
 
-export default Button
+export default Button;
