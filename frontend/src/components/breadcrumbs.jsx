@@ -11,8 +11,8 @@ const Breadcrumbs = () => {
     orders: '受注管理',
     create: '注文書作成',
     edit: '注文書編集',
-    deliveries: '納品書管理',
-    stats: '統計情報',
+    deliveries: '納品管理',
+    stats: '統計情報管理',
     customers: '顧客情報',
   };
 
