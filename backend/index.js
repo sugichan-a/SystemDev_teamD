@@ -1,16 +1,23 @@
-const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 3000;
+import express from 'express';
+import orders from './api/orders.js';
+import deliveries from './api/deliveries.js';
+import stats from './api/stats.js';
+import customers from './api/customers.js';
 
-// ミドルウェア
+const app = express();
+const PORT = process.env.PORT || 4000;
+
 app.use(express.json());
 
-// ルート
+app.use('/api/orders', orders);
+app.use('/api/deliveries', deliveries);
+app.use('/api/stats', stats);
+app.use('/api/customers', customers);
+
 app.get('/', (req, res) => {
-  res.send('Hello, Express!');
+  res.send('API is running');
 });
 
-// サーバー起動
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
