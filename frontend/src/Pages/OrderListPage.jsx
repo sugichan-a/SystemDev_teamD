@@ -4,16 +4,16 @@ import Button from '../components/Button';
 import SearchInput from '../components/SearchInput';
 import DateInput from '../components/DateInput';
 import Checkbox from '../components/Checkbox';
+import HeaderNav from '../components/HeaderNav';
 
 const OrderListPage = () => {
-    const navigate = useNavigate();
-    const [keyword, setKeyword] = useState('');
-    const [fromDate, setFromDate] = useState('');
-    const [toDate, setToDate] = useState('');
-    const [hasNotes, setHasNotes] = useState(false);
-    const [includeDeleted, setIncludeDeleted] = useState(false);
+  const navigate = useNavigate();
 
-
+  const [keyword, setKeyword] = useState('');
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  const [hasNotes, setHasNotes] = useState(false);
+  const [includeDeleted, setIncludeDeleted] = useState(false);
 
   const handleSearch = () => {
     console.log('検索ワード:', keyword);
@@ -22,113 +22,175 @@ const OrderListPage = () => {
 
   return (
     <div className="p-4">
+      {/* ナビゲーション */}
+      <HeaderNav />
 
-      {/* ナビゲーションボタン */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        <Button onClick={() => navigate('/orders')}>受注管理</Button>
-        <Button onClick={() => navigate('/deliveries')}>納品管理</Button>
-        <Button onClick={() => navigate('/stats')}>統計情報管理</Button>
+      {/* 検索条件ラベル */}
+      <div
+        style={{
+          backgroundColor: '#616161',
+          color: 'white',
+          textAlign: 'center',
+          padding: '10px',
+          fontWeight: 'bold',
+          borderRadius: '6px 6px 0 0',
+          width: '115%',
+        }}
+      >
+        検索条件を指定して検索してください
       </div>
-
-      {/* ラベル */}
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <label className="block text-sm font-medium text-gray-700">
-          検索条件を指定して検索してください
-        </label>
-      </div>
-
 
       {/* 検索エリア */}
-      <div className="bg-gray-100 p-4 rounded-lg shadow mb-6 space-y-4">
-        <div className="flex flex-col gap-4">
-         <label className="block text-sm font-medium text-gray-700">
-          フリーワード
-        </label>
-          <SearchInput
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-          />
-      </div>
+      <div
+        style={{
+          backgroundColor: '#e0e0e0',
+          padding: '16px 16px 5px',
+          borderRadius: '0 0 6px 6px',
+          width: '113%',
+          
+        }}
+      >
+        {/* フリーワード */}
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.1rem' }}>
+          <div
+            style={{
+              width: '120px',
+              backgroundColor: '#757575',
+              color: 'white',
+              padding: '10px',
+              fontWeight: 'bold',
+              textAlign: 'center',
+              marginTop: '-15px',
+              marginLeft: '-15px'
+            }}
+          >
+            フリーワード
+          </div>
+            <input
+              type="text"
+              className="search-input"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              placeholder="キーワードを入力"
+              
+              style={{
+              flex: 1,
+              padding: '7px',
+              marginTop: '-13px',  // 上に少し上げる
+              border: '1px solid #ccc',
+              borderRadius: '6px',
+              fontSize: '1rem',
+              }}
+            />
+        </div>
 
-      {/* 日付管理 */}
-      <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-700">受注日付管理</span>
+        {/* 受注日付管理 */}
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.1rem' }}>
+          <div
+            style={{
+              width: '120px',
+              backgroundColor: '#757575',
+              color: 'white',
+              padding: '10px',
+              fontWeight: 'bold',
+              textAlign: 'center',
+              marginLeft: '-15px'
+            }}
+          >
+            受注日付管理
+          </div>
           <DateInput value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
-          <span>～</span>
+          <span style={{ margin: '0 10px' }}>～</span>
           <DateInput value={toDate} onChange={(e) => setToDate(e.target.value)} />
-      </div>
+        </div>
 
-      {/* 備考・削除データ欄 */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-        <label className="block text-sm font-medium text-gray-700">
-          備考
-        </label>
-          <Checkbox 
-            label="備考あり" 
-            checked={hasNotes} 
-            onChange={(e) => setHasNotes(e.target.checked)} 
-            name="hasNotes" 
+        {/* 備考と削除データ */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <div
+            style={{
+              width: '120px',
+              backgroundColor: '#757575',
+              color: 'white',
+              padding: '10px',
+              fontWeight: 'bold',
+              textAlign: 'center',
+              marginLeft: '-15px',
+            }}
+          >
+            備考
+          </div>
+          <Checkbox
+            label="備考あり"
+            checked={hasNotes}
+            onChange={(e) => setHasNotes(e.target.checked)}
+            name="hasNotes"
           />
-       <label className="block text-sm font-medium text-gray-700">
-          削除データ
-        </label>
-          <Checkbox 
-            label="削除データを含む" 
-            checked={includeDeleted} 
-            onChange={(e) => setIncludeDeleted(e.target.checked)} 
-            name="includeDeleted" 
+
+          <div
+            style={{
+              width: '120px',
+              backgroundColor: '#757575',
+              color: 'white',
+              padding: '10px',
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}
+          >
+            削除データ
+          </div>
+          <Checkbox
+            label="削除データを含む"
+            checked={includeDeleted}
+            onChange={(e) => setIncludeDeleted(e.target.checked)}
+            name="includeDeleted"
           />
+        </div>
       </div>
 
       {/* ボタン群 */}
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-        marginTop: '1rem',
-      }}>
-
-        {/* 上段：中央＋右 */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          alignItems: 'center'
-        }}>
-          
-          {/* 中央に配置 */}
-          <div style={{
-            flex: 1,
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+        {/* 上段ボタン：検索 & 注文書作成 */}
+        <div
+          style={{
             display: 'flex',
-            justifyContent: 'center',
-            minWidth: '200px'
-          }}>
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+          }}
+        >
+          <div
+            style={{
+              flex: 1,
+              display: 'flex',
+              justifyContent: 'center',
+              minWidth: '200px',
+            }}
+          >
             <button
               onClick={handleSearch}
               style={{
                 backgroundColor: '#ec407a',
                 color: '#fff',
-                padding: '12px 24px',
+                padding: '8px 40px',
                 borderRadius: '8px',
                 border: 'none',
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
             >
               この条件で検索する
             </button>
           </div>
 
-          {/* 注文書作成（右上） */}
           <div>
             <button
               onClick={() => console.log('注文書作成')}
               style={{
                 backgroundColor: '#ec407a',
                 color: '#fff',
-                padding: '10px 16px',
+                padding: '8px 30px',
                 borderRadius: '8px',
                 border: 'none',
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
             >
               注文書作成
@@ -136,32 +198,31 @@ const OrderListPage = () => {
           </div>
         </div>
 
-        {/* 下段：左＋右 */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap'
-        }}>
-          
-          {/* 左：削除 */}
+        {/* 下段ボタン：削除 & 昇順・降順 */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+          }}
+        >
           <div>
             <button
               onClick={() => console.log('選んだ項目を削除')}
               style={{
                 backgroundColor: '#ec407a',
                 color: '#fff',
-                padding: '10px 16px',
+                padding: '8px 16px',
                 borderRadius: '8px',
                 border: 'none',
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
             >
               選んだ項目を削除
             </button>
           </div>
 
-          {/* 右：昇順／降順 */}
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             <button
               onClick={() => console.log('昇順')}
@@ -171,7 +232,7 @@ const OrderListPage = () => {
                 padding: '8px 16px',
                 borderRadius: '6px',
                 border: 'none',
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
             >
               昇順
@@ -184,24 +245,16 @@ const OrderListPage = () => {
                 padding: '8px 16px',
                 borderRadius: '6px',
                 border: 'none',
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
             >
               降順
             </button>
           </div>
         </div>
-
-
-          </div>
-        </div>
-      
-
-     {/* 結果一覧（未実装） */}
-      <div className="text-gray-500 text-sm">検索結果はここに表示されます。</div>
-   </div>
+      </div>
+    </div>
   );
 };
-
 
 export default OrderListPage;
