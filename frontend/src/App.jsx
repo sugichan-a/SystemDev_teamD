@@ -11,6 +11,7 @@ import DeliveryCreatePage from './Pages/DeliveryCreatePage';
 import DeliveryEditPage from './Pages/DeliveryEditPage';
 import StatsPage from './Pages/StatsPage';
 import CustomerPage from './Pages/CustomerPage';
+import LoginPage from './Pages/Login';
 
 // パンくずリストをインポート
 import Breadcrumbs from './components/breadcrumbs';
