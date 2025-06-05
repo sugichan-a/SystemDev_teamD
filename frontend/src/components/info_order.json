@@ -1,40 +1,6 @@
 [
   {
     "delivery_name": "文芸企画株式会社",
-    "order_date": "2025-03-09",
-    "items": [
-      {
-        "title": "やさしい日本史",
-        "quantity": 3,
-        "unit_price": 2551,
-        "description": "ベストセラー",
-        "remarks": "改訂版"
-      },
-      {
-        "title": "新しい国語ドリル",
-        "quantity": 2,
-        "unit_price": 1855,
-        "description": "ベストセラー",
-        "remarks": "新装版"
-      },
-      {
-        "title": "物理のエッセンス",
-        "quantity": 4,
-        "unit_price": 858,
-        "description": "季節のおすすめ",
-        "remarks": "新装版"
-      },
-      {
-        "title": "中学英語ワーク",
-        "quantity": 1,
-        "unit_price": 891,
-        "description": "",
-        "remarks": ""
-      }
-    ]
-  },
-  {
-    "delivery_name": "文芸企画株式会社",
     "order_date": "2025-05-12",
     "items": [
       {
