@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 
-
-
 const initialCustomerData = [
   {
     id: 1,
@@ -39,9 +37,8 @@ const initialCustomerData = [
 
 const parseLeadTime = (leadTime) => parseFloat(leadTime.replace('日', ''));
 
-const CustomerSearch = () => {
+const StatsPage = () => {
   const [keyword, setKeyword] = useState('');
-  // デフォルトでリードタイム降順
   const [data, setData] = useState(
     [...initialCustomerData].sort((a, b) => parseLeadTime(b.leadTime) - parseLeadTime(a.leadTime))
   );
@@ -84,7 +81,6 @@ const CustomerSearch = () => {
     <div className="p-6 bg-gray-100 space-y-6">
       {/* ナビゲーションボタン */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-
         <Button onClick={() => navigate('/orders')}>受注管理</Button>
         <Button onClick={() => navigate('/deliveries')}>納品管理</Button>
         <Button onClick={() => navigate('/stats')}>統計情報管理</Button>
@@ -158,49 +154,10 @@ const CustomerSearch = () => {
               </td>
             </tr>
           ))}
-          
-      {/* 情報テーブル */}
-      <table className="stats-table">
-        <tbody>
-          <tr className="stats-tr">
-            <th className="stats-th">顧客名</th>
-            <td className="stats-td" colSpan={3}>{customerInfo.name}</td>
-          </tr>
-          <tr className="stats-tr">
-            <th className="stats-th-2" rowSpan={2} colSpan={2} style={{verticalAlign:'middle'}}>
-              <div>売上高</div>
-              <div style={{marginTop:'16px'}}>リードタイム</div>
-            </th>
-            <td className="stats-td-2" colSpan={2}>{customerInfo.sales}</td>
-          </tr>
-          <tr className="stats-tr">
-            <td className="stats-td-2" colSpan={2}>{customerInfo.leadTime}</td>
-          </tr>
-          <tr className="stats-tr">
-            <th className="stats-th">担当者名</th>
-            <td className="stats-td">{customerInfo.staff}</td>
-            <th className="stats-th">電話番号</th>
-            <td className="stats-td">{customerInfo.phone}</td>
-          </tr>
-          <tr className="stats-tr">
-            <th className="stats-th">住所</th>
-            <td className="stats-td" colSpan={3}>{customerInfo.address}</td>
-          </tr>
-          <tr className="stats-tr">
-            <th className="stats-th">配送先条件等</th>
-            <td className="stats-td">{customerInfo.deliveryCondition}</td>
-            <th className="stats-th">顧客登録日</th>
-            <td className="stats-td">{customerInfo.registerDate}</td>
-          </tr>
-          <tr className="stats-tr">
-            <th className="stats-th">備考</th>
-            <td className="stats-td" colSpan={3}>{customerInfo.note}</td>
-          </tr>
         </tbody>
       </table>
     </div>
   );
 };
 
-export default CustomerSearch;
-}
+export default StatsPage;
