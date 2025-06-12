@@ -33,7 +33,7 @@ const ActionButton = ({ label, onClick }) => (
     style={{
       backgroundColor: '#ec407a',
       color: '#fff',
-      padding: '8px 30px',
+      padding: '8px 40px',
       borderRadius: '8px',
       border: 'none',
       cursor: 'pointer',
