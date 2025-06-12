@@ -1,16 +1,23 @@
-import React from "react";
+import React from 'react';
 
-function SearchInput({ value, onChange }) {
+const SearchInput = ({ keyword, setKeyword }) => {
   return (
     <input
       type="text"
-      placeholder="Search orders..."
-      className="border rounded-lg px-4 py-2 font-roboto"
-      value={value}
-      onChange={onChange}
-      name="search"
+      className="search-input"
+      value={keyword}
+      onChange={(e) => setKeyword(e.target.value)}
+      placeholder="キーワードを入力"
+      style={{
+        flex: 1,
+        padding: '7px',
+        marginTop: '-13px',
+        border: '1px solid #ccc',
+        borderRadius: '6px',
+        fontSize: '1rem',
+      }}
     />
   );
-}
+};
 
 export default SearchInput;
