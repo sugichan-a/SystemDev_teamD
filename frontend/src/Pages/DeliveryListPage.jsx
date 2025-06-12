@@ -6,8 +6,29 @@ import SearchInput from '../components/SearchInput';
 import Checkbox from '../components/Checkbox';
 import DateInput from '../components/DateInput';
 import OrderTable from '../components/OrderTable';
-import rawData from '../components/info_order.json';
+import Pagination from '../components/Pagination';
+import SearchPanel from '../components/SearchPanel';
+// import rawData from '../components/info_order.json';
+// 仮データ（info_order.jsonが無い場合のダミーデータ）
+const rawData = [
+  {
+    delivery_name: '株式会社ブックウェイ',
+    order_date: '2025-05-15',
+    remarks: '次回入荷は未定'
+  },
+  {
+    delivery_name: 'ひまわり書房',
+    order_date: '2025-05-18',
+    remarks: ''
+  },
+  {
+    delivery_name: 'ページワン',
+    order_date: '2025-05-20',
+    remarks: '2025年度版'
+  }
+];
 import HeaderNav from '../components/HeaderNav';
+import NavButton from '../components/button/NavButton';
 
 // JSONデータを表示用に変換する（idやorderNumberを追加）
 const transformData = (data) => {
@@ -115,42 +136,79 @@ const DeliveryListPage = () => {
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto font-roboto">
+    <div style={{ background: '#F9E6ED', minHeight: '100vh', width: '100%', paddingTop: 40, paddingBottom: 40 }}>
       {/* ナビゲーションボタン（受注・納品・統計） */}
-      <HeaderNav />
+      <div style={{ display: 'flex', gap: 24, marginBottom: 32, justifyContent: 'center' }}>
+        <NavButton to="/orders">受注管理</NavButton>
+        <NavButton to="/deliveries">納品管理</NavButton>
+        <NavButton to="/stats">統計情報管理</NavButton>
+      </div>
 
-      <h1 className="text-2xl font-bold mb-6">納品管理画面</h1>
+      <h1 className="text-2xl font-bold mb-6" style={{ textAlign: 'center', marginBottom: 32 }}>納品管理画面</h1>
 
       {/* 検索条件エリア */}
-      <div className="bg-gray-100 p-4 rounded-md mb-6 space-y-4">
-        <h2 className="text-lg font-semibold text-gray-700">検索条件を指定してください</h2>
-
-        {/* フリーワード検索 */}
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">フリーワード</label>
-          <SearchInput value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+      <SearchPanel style={{ margin: '0 auto 40px auto', boxShadow: '0 2px 8px #0001' }}>
+        <h2 style={{ fontSize: 20, fontWeight: 700, color: '#374151', marginBottom: 24 }}>検索条件を指定してください</h2>
+        {/* 顧客名 */}
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
+          <label style={{
+            width: 60,
+            height: 24,
+            color: '#192550',
+            fontFamily: 'Abhaya Libre ExtraBold',
+            fontSize: 20,
+            fontWeight: 800,
+            lineHeight: 'normal',
+            marginRight: 20,
+            display: 'flex',
+            alignItems: 'center',
+          }}>顧客名</label>
+          <div style={{
+            width: 850,
+            height: 40,
+            background: '#EBE8E8',
+            borderRadius: 10,
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0 16px',
+          }}>
+            <SearchInput
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              placeholder="顧客名を入力"
+              style={{
+                width: '100%',
+                height: '100%',
+                background: 'transparent',
+                border: 'none',
+                outline: 'none',
+                fontSize: 18,
+                color: '#222',
+              }}
+            />
+          </div>
         </div>
-
-        {/* 日付検索 */}
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-700">納品日付管理</span>
+        {/* 受注日付 */}
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
+          <label style={{ width: 100, fontWeight: 500, color: '#222' }}>受注日付</label>
           <DateInput value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
-          <span>～</span>
+          <span style={{ margin: '0 12px' }}>～</span>
           <DateInput value={toDate} onChange={(e) => setToDate(e.target.value)} />
         </div>
-
         {/* チェック条件 */}
-        <div className="flex items-center gap-6">
-          <Checkbox label="備考あり" checked={hasNotes} onChange={(e) => setHasNotes(e.target.checked)} name="hasNotes" />
-          <Checkbox label="削除データを含む" checked={includeDeleted} onChange={(e) => setIncludeDeleted(e.target.checked)} name="includeDeleted" />
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
+          <label style={{ width: 100, fontWeight: 500, color: '#222' }}>注文状態</label>
+          <div style={{ display: 'flex', gap: 32 }}>
+            <Checkbox label="備考あり" checked={hasNotes} onChange={(e) => setHasNotes(e.target.checked)} name="hasNotes" />
+            <Checkbox label="削除データを含む" checked={includeDeleted} onChange={(e) => setIncludeDeleted(e.target.checked)} name="includeDeleted" />
+          </div>
         </div>
-
-        {/* 検索ボタンとリセットボタン */}
-        <div className="flex justify-center gap-4">
-          <Button onClick={handleSearch} className="bg-pink-500 hover:bg-pink-600">この条件で検索する</Button>
-          <Button onClick={handleClearConditions} className="bg-gray-400">検索条件をクリア</Button>
+        {/* ボタン */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginTop: 12 }}>
+          <Button onClick={handleSearch} className="bg-pink-500 hover:bg-pink-600" style={{ minWidth: 200, fontWeight: 700, fontSize: 16, borderRadius: 24, background: '#192040' }}>この条件で検索する</Button>
+          <Button onClick={handleClearConditions} className="bg-gray-400" style={{ minWidth: 200, fontWeight: 700, fontSize: 16, borderRadius: 24 }}>検索条件をクリア</Button>
         </div>
-      </div>
+      </SearchPanel>
 
       {/* 操作ボタン：一括削除と納品書作成 */}
       <div className="flex justify-between items-center mb-4">
@@ -175,19 +233,11 @@ const DeliveryListPage = () => {
       />
 
       {/* ページネーション */}
-      <div className="flex justify-center mt-6 gap-2">
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i + 1}
-            onClick={() => setCurrentPage(i + 1)}
-            className={`px-3 py-1 rounded border ${
-              currentPage === i + 1 ? 'bg-pink-500 text-white' : 'bg-white text-gray-800'
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 };
