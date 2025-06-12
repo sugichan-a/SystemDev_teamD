@@ -48,20 +48,21 @@ body {
   overflow-x: hidden;
 }
 
-/* ナビバー（紺） */
+/* 上部ナビバー */
 .navbar {
-  background-color: #1b2a58;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  width: 100%;
-  box-sizing: border-box;
   position: fixed;
   top: 0;
   left: 0;
+  height: 60px;
+  width: 100%;
   z-index: 1000;
+
+  background-color: #1b2a58;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 
@@ -77,24 +78,30 @@ body {
 
 /* パンくずリスト */
 .breadcrumb {
-  background-color: white;
-  padding: 10px 20px;
-  font-size: 0.9rem;
-  width: 100%;
-  box-sizing: border-box;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
   position: fixed;
-  top: 44px;
+  top: 60px; /* ← navbarの下に */
   left: 0;
+  height: 40px;
+  width: 100%;
   z-index: 999;
+  
+  background-color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+
   text-align: left;
 }
 /* メイン */
 .main-content {
+  /* ここで余白！60(navbar) + 40(breadcrumb) */
+  margin-top: 100px;
+  padding: 40px 20px;
   display: flex;
   justify-content: center;
   gap: 20px;
-  padding: 40px 20px;
   flex-wrap: wrap;
 }
 
@@ -111,4 +118,187 @@ body {
   font-weight: bold;
   color: #1b2a58;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* --- タブボタン --- */
+.tab-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.tab {
+  background-color: #f8bfc9;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  color: #1b2a58;
+  cursor: pointer;
+}
+
+.tab.active {
+  background-color: #ffffff;
+  border: 2px solid #1b2a58;
+}
+
+/* --- 検索フォーム --- */
+.search-form {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.search-form input[type="text"],
+.search-form input[type="date"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.date-range {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.status-filters {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.search-button {
+  background-color: #1b2a58;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  width: fit-content;
+}
+
+/* --- アクションボタン --- */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 20px;
+}
+
+.action-buttons .danger {
+  background-color: #f48484;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.action-buttons .primary {
+  background-color: #1b2a58;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* --- テーブル --- */
+.order-table {
+  width: 100%;
+  max-width: 900px;
+  background-color: #fff;
+  border-collapse: collapse;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.order-table th,
+.order-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+.order-table thead {
+  background-color: #eee;
+  font-weight: bold;
+}
+
+/* --- 注文状態バッジ --- */
+.badge {
+  padding: 6px 12px;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.badge.blue {
+  background-color: #68a8e0;
+}
+
+.badge.red {
+  background-color: #f87171;
+}
+
+.badge.gray {
+  background-color: #999;
+}
+
+/* --- ページネーション --- */
+.pagination {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  background-color: #f8bfc9;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* カラムレイアウト（全体） */
+.column-layout {
+  /* ここで余白！60(navbar) + 40(breadcrumb) */
+  margin-top: 100px;
+  max-width: 960px;
+  margin: 0 auto;
+  text-align: left;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* テーブル内の操作ボタンも統一 */
+.order-table button {
+  background-color: #f8bfc9;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* 全体の文字寄せも統一したいとき */
+.order-table td,
+.order-table th {
+  text-align: center;
 }
