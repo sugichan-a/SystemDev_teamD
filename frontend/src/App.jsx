@@ -13,14 +13,11 @@ import StatsPage from './Pages/StatsPage';
 import CustomerPage from './Pages/CustomerPage';
 import LoginPage from './Pages/Login';
 
-// パンくずリストをインポート
-import Breadcrumbs from './components/breadcrumbs';
 
 const App = () => {
   return (
     <Router>
       <div className="p-4"> {/* 全体のレイアウトラッパー */}
-        <Breadcrumbs /> {/* 全ページ共通で表示 */}
         
         <Routes>
           <Route path="/" element={<HomePage />} />
