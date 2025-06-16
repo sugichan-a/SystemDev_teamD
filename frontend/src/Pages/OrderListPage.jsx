@@ -1,6 +1,7 @@
 import React from 'react';
 import '../App.css';
 import Breadcrumbs from '../components/breadcrumbs';
+import NavButton from '../components/button/NavButton';
 
 const OrderListPage = () => {
   const testData = [
@@ -19,10 +20,10 @@ const OrderListPage = () => {
 
       <div className="main-content column-layout">
         <div className="tab-buttons">
-          <button className="tab active">受注管理</button>
-          <button className="tab">納品管理</button>
-          <button className="tab">統計情報管理</button>
-        </div>
+          <NavButton to="/orders">受注管理</NavButton>
+          <NavButton to="/deliveries">納品管理</NavButton>
+          <NavButton to="/stats">統計情報管理</NavButton>
+      </div>
 
         <div className="search-form">
           <input type="text" placeholder="顧客名" />
