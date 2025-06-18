@@ -19,7 +19,7 @@ const HomePage = () => {
       </nav>
 
       {/* メインカードエリア */}
-      <main className="main-content">
+      <main className="cards-container">
         <div
           className="card"
           onClick={() => navigate('/orders')}

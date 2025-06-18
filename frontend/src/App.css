@@ -11,9 +11,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -22,6 +24,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -33,8 +36,29 @@
   }
 }
 
+/* ── カード群を横並びにするラッパー ── */
+.cards-container {
+  display: flex;                  /* 横並びにする */
+  justify-content: center;        /* 親要素内で中央寄せ */
+  align-items: flex-start;        /* カード上端を揃える */
+  gap: 1rem;                      /* カード間の等間隔 */
+  flex-wrap: wrap;                /* 幅が足りなくなったら折り返す */
+  padding: 1rem;                  /* 好みで余白を追加 */
+}
+
+/* カード */
 .card {
-  padding: 2em;
+  background-color: white;
+  width: 180px;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #1b2a58;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .read-the-docs {
@@ -79,45 +103,38 @@ body {
 /* パンくずリスト */
 .breadcrumb {
   position: fixed;
-  top: 60px; /* ← navbarの下に */
+  top: 60px;
+  /* ← navbarの下に */
   left: 0;
   height: 40px;
   width: 100%;
   z-index: 999;
-  
+
   background-color: white;
   display: flex;
   align-items: center;
   padding: 0 20px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
 
   text-align: left;
 }
+
 /* メイン */
 .main-content {
-  /* ここで余白！60(navbar) + 40(breadcrumb) */
   margin-top: 100px;
   padding: 40px 20px;
   display: flex;
+  flex-direction: column;
+  /* 中央寄せには必要 */
+  align-items: center;
+  /* 横中央寄せ */
   justify-content: center;
   gap: 20px;
   flex-wrap: wrap;
-}
-
-/* カード */
-.card {
-  background-color: white;
-  width: 180px;
-  height: 240px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #1b2a58;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* --- タブボタン --- */
@@ -148,7 +165,7 @@ body {
   background-color: #ffffff;
   padding: 20px;
   border-radius: 16px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
   width: 100%;
   max-width: 700px;
@@ -157,7 +174,15 @@ body {
   gap: 15px;
 }
 
-.search-form input[type="text"],
+.search-form input[type="text"] {
+  width: 500px;
+  /* ← 小さめに調整 */
+  align-self: center;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
 .search-form input[type="date"] {
   padding: 8px;
   border: 1px solid #ccc;
@@ -166,13 +191,38 @@ body {
 
 .date-range {
   display: flex;
-  gap: 8px;
+  justify-content: center;
+  /* 中央ぞろえ */
+  gap: 12px;
+  /* 各入力の間隔 */
+  flex-wrap: wrap;
   align-items: center;
+}
+
+.date-range input[type="date"] {
+  width: 150px;
+  /* ← やや広めに設定 */
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background-color: #fff;
+  color: #333;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s;
+}
+
+.date-range input[type="date"]:focus {
+  border-color: #1b2a58;
+  outline: none;
 }
 
 .status-filters {
   display: flex;
-  gap: 16px;
+  justify-content: center;
+  /* 横中央ぞろえ */
+  gap: 24px;
+  /* 等間隔 */
   flex-wrap: wrap;
 }
 
@@ -180,38 +230,52 @@ body {
   background-color: #1b2a58;
   color: white;
   border: none;
-  padding: 10px;
+  padding: 10px 15px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
   width: fit-content;
+  align-self: center;
+  /* ボタンの中央寄せ */
 }
 
 /* --- アクションボタン --- */
+.action-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
 .action-buttons {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   width: 100%;
   max-width: 700px;
-  margin-bottom: 20px;
+  margin: 20px auto;
 }
 
 .action-buttons .danger {
   background-color: #f48484;
   color: white;
   border: none;
-  padding: 10px 16px;
+  padding: 10px 15px;
   border-radius: 8px;
   cursor: pointer;
+  font-weight: bold;
+  width: fit-content;
 }
 
 .action-buttons .primary {
   background-color: #1b2a58;
   color: white;
   border: none;
-  padding: 10px 16px;
+  padding: 10px 15px;
   border-radius: 8px;
   cursor: pointer;
+  font-weight: bold;
+  width: fit-content;
 }
 
 /* --- テーブル --- */
@@ -220,7 +284,7 @@ body {
   max-width: 900px;
   background-color: #fff;
   border-collapse: collapse;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
@@ -238,23 +302,46 @@ body {
 
 /* --- 注文状態バッジ --- */
 .badge {
-  padding: 6px 12px;
-  border-radius: 12px;
-  color: white;
-  font-size: 0.85rem;
+  display: inline-block;
+  /* 要素をインラインブロックに */
+  padding: 0.25em 0.5em;
+  /* もともとの余白 */
+  border-radius: 0.5em;
+  /* 角丸 */
+  font-size: 0.875rem;
+  /* 文字サイズ */
+  color: #fff;
+  /* 文字色 */
+  white-space: nowrap;
+  /* テキストを折り返さない */
+  text-align: center;
+  /* 中央揃え */
+  min-width: 6em;
+  /* ← 追加：最小幅を指定（6em=文字幅×6） */
   font-weight: bold;
 }
 
-.badge.blue {
+/* ── ステータス別の色定義 ── */
+.badge.納品待ち {
+  background-color: #999;
+}
+
+.badge.納品済 {
   background-color: #68a8e0;
 }
 
-.badge.red {
+.badge.削除済 {
   background-color: #f87171;
 }
 
-.badge.gray {
-  background-color: #999;
+.badge.キャンセル済 {
+  background-color: #f87171;
+  white-space: nowrap;
+  /* ← こちらにも明示追加しておくと安心 */
+}
+
+.badge.未納品 {
+  background-color: #f48484;
 }
 
 /* --- ページネーション --- */
@@ -276,7 +363,8 @@ body {
 
 /* カラムレイアウト（全体） */
 .column-layout {
-  margin: 100px auto 0 auto;  /* ← 上余白だけ 100px、左右は中央寄せ */
+  margin: 100px auto 0 auto;
+  /* ← 上余白だけ 100px、左右は中央寄せ */
   max-width: 960px;
   text-align: left;
   padding: 20px;
@@ -299,4 +387,68 @@ body {
 .order-table td,
 .order-table th {
   text-align: center;
+}
+
+/* ── ミニボタン定義 ── */
+.mini-button {
+  display: inline-block;         /* インラインブロックにしてサイズ指定可能に */
+  background-color: #fff;        /* 白背景 */
+  color: #333;                   /* 濃いグレー文字 */
+  border: 1px solid #ccc;        /* 薄いグレーの境界線 */
+  border-radius: 0.25em;         /* 少し丸みを帯びた角 */
+  padding: 0.25em 0.5em;         /* 上下 0.25em・左右 0.5em */
+  font-size: 0.75rem;            /* 小さめフォント */
+  cursor: pointer;               /* ホバー時ポインターに */
+  margin-right: 0.5em;           /* ボタン間の余白 */
+  white-space: nowrap;           /* テキスト折り返し禁止 */
+  text-align: center;            /* ラベル中央寄せ */
+}
+
+/* ── ホバー時のエフェクト ── */
+.mini-button:hover {
+  background-color: #f5f5f5;     /* 背景をほんのりグレーに */
+}
+
+/* — ソートボタンまわり */
+.actions-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sort-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.sort-buttons {
+  display: flex;
+  gap: 8px;
+  order: 2;
+  margin-top: -4px;
+}
+
+/* 昇順：赤系, 降順：青系 */
+.sort-button.ascending {
+  background-color: #f48484;
+  color: white;
+}
+.sort-button.descending {
+  background-color: #68a8e0;
+  color: white;
+}
+
+/* 選択中は内側にアクセント枠を追加 */
+.sort-button.active {
+  box-shadow: inset 0 0 0 2px #1b2a58;
+}
+
+.right-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.primary {
+  order: 1;
 }
