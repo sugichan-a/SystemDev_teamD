@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { ChevronRight } from 'lucide-react';
 import Button from '../components/Button';
 
 const initialCustomerData = [
@@ -37,6 +38,53 @@ const initialCustomerData = [
 
 const parseLeadTime = (leadTime) => parseFloat(leadTime.replace('日', ''));
 
+// --- Breadcrumbsコンポーネントを外に出す ---
+const Breadcrumbs = () => {
+  const location = useLocation();
+  const paths = location.pathname.split('/').filter(Boolean);
+
+  // 表示名マッピング
+  const displayNameMap = {
+    orders: '受注管理',
+    create: '注文書作成',
+    edit: '注文書編集',
+    deliveries: '納品管理',
+    stats: '統計情報管理',
+    customers: '顧客情報',
+  };
+
+  const breadcrumbItems = paths.map((segment, index) => {
+    const isLast = index === paths.length - 1;
+    const pathSlice = paths.slice(0, index + 1);
+    const routePath = '/' + pathSlice.join('/');
+
+    // ID部分は除外（edit/:id など）
+    const label = displayNameMap[segment] || (segment.match(/^\d+$/) ? '詳細' : segment);
+
+    return (
+      <span key={routePath} className="flex items-center gap-1">
+        {!isLast ? (
+          <>
+            <Link to={routePath} className="text-blue-600 hover:underline">{label}</Link>
+            <ChevronRight className="inline w-4 h-4 text-gray-400" />
+          </>
+        ) : (
+          <span className="text-gray-500">{label}</span>
+        )}
+      </span>
+    );
+  });
+
+  return (
+    <nav className="text-sm text-gray-700 flex items-center gap-1 mb-4">
+      <Link to="/" className="text-blue-600 hover:underline">ホーム</Link>
+      {paths.length > 0 && <ChevronRight className="inline w-4 h-4 text-gray-400" />}
+      {breadcrumbItems}
+    </nav>
+  );
+};
+// --- ここまで ---
+
 const StatsPage = () => {
   const [keyword, setKeyword] = useState('');
   const [data, setData] = useState(
@@ -50,7 +98,7 @@ const StatsPage = () => {
     setData(
       [...initialCustomerData]
         .filter((item) => item.name.includes(keyword))
-        .sort((a, b) => parseLeadTime(b.leadTime) - parseLeadTime(a.leadTime)) // 検索後もリードタイム降順
+        .sort((a, b) => parseLeadTime(b.leadTime) - parseLeadTime(a.leadTime))
     );
     setSelected([]);
   };
@@ -65,7 +113,7 @@ const StatsPage = () => {
     setData(sorted);
   };
 
-  // Excelアップロード（ダミー）
+  // Excelアップロードボタン（ダミー）
   const handleExcelUpload = () => {
     alert('Excelアップロード（ダミー）');
   };
@@ -79,6 +127,9 @@ const StatsPage = () => {
 
   return (
     <div className="p-6 bg-gray-100 space-y-6">
+      {/* パンくずリスト */}
+      <Breadcrumbs />
+
       {/* ナビゲーションボタン */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
         <Button onClick={() => navigate('/orders')}>受注管理</Button>
