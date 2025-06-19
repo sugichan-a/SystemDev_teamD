@@ -26,6 +26,20 @@ const OrderListPage = () => {
       </div>
 
         <div className="search-form">
+                {/* 検索条件ラベル */}
+      <div
+        style={{
+          backgroundColor: '#616161',
+          color: 'white',
+          textAlign: 'center',
+          padding: '10px',
+          fontWeight: 'bold',
+          borderRadius: '6px 6px 0 0',
+          width: '115%',
+        }}
+      >
+        検索条件を指定して検索してください
+      </div>
           <input type="text" placeholder="顧客名" />
           <div className="date-range">
             <input type="date" /> ～ <input type="date" />
