@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../App.css';
 import Breadcrumbs from '../components/breadcrumbs';
 import NavButton from '../components/button/NavButton';
+import CustomerSelectModal from '../components/CustomerSelectModal';
 
 const OrderListPage = () => {
   const initialData = [
@@ -24,6 +25,8 @@ const OrderListPage = () => {
     '削除済': false,
   });
   const [sortOrder, setSortOrder] = useState('desc');
+  const [showModal, setShowModal] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   const toggleSelectAll = () => {
     if (selectedIds.size === filteredData.length) setSelectedIds(new Set());
@@ -68,29 +71,64 @@ const OrderListPage = () => {
           <NavButton to="/stats">統計情報管理</NavButton>
         </div>
 
-        <div className="search-form">
-          <input type="text" placeholder="顧客名" value={nameFilter} onChange={e => setNameFilter(e.target.value)} />
-          <div className="date-range">
-            <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} /> ～ <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} />
+        <form className="search-form" onSubmit={e => e.preventDefault()}>
+          <table className="search-form-table">
+            <tbody>
+              <tr>
+                <th><label htmlFor="customerName">顧客名</label></th>
+                <td><input id="customerName" type="text" value={nameFilter} onChange={e => setNameFilter(e.target.value)} /></td>
+              </tr>
+              <tr>
+                <th><label htmlFor="dateFrom">受注日付</label></th>
+                <td>
+                  <div className="date-range">
+                    <input id="dateFrom" type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} />
+                    <span style={{fontWeight:'bold', color:'#2d2d4b', fontSize:'1.2em'}}>～</span>
+                    <input id="dateTo" type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} />
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th>注文状態</th>
+                <td>
+                  <div className="status-filters">
+                    {Object.keys(statusFilters).map(status => (
+                      <label key={status}><input type="checkbox" checked={statusFilters[status]} onChange={() => toggleStatus(status)} /> {status}</label>
+                    ))}
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="search-form-bottom">
+            <button className="search-button" type="submit">この条件で検索する</button>
           </div>
-          <div className="status-filters">
-            {Object.keys(statusFilters).map(status => (
-              <label key={status}><input type="checkbox" checked={statusFilters[status]} onChange={() => toggleStatus(status)} /> {status}</label>
-            ))}
-          </div>
-          <button className="search-button" onClick={e => e.preventDefault()}>この条件で検索する</button>
-        </div>
+        </form>
 
-        <div className="action-buttons">
-          <button className="danger" onClick={deleteSelected}>選んだ項目を削除</button>
-          <div className="right-actions">
-            <button className="primary">注文書作成</button>
-            <div className="sort-buttons">
-              <button className={`sort-button ascending ${sortOrder==='asc'? 'active':''}`} onClick={() => setSortOrder('asc')}>昇順</button>
-              <button className={`sort-button descending ${sortOrder==='desc'? 'active':''}`} onClick={() => setSortOrder('desc')}>降順</button>
+        <div className="action-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%', maxWidth: 800, margin: '40px auto 0 auto' }}>
+          {/* 左側：削除ボタン */}
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
+            <button className="danger" style={{ borderRadius: '24px', fontWeight: 'bold', fontSize: '1.1rem', padding: '14px 36px', background: '#e57d94', color: '#fff', border: 'none' }} onClick={deleteSelected}>
+              選んだ項目を削除
+            </button>
+          </div>
+          {/* 右側：注文書作成＋ソート */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
+            <button className="primary-button" style={{ borderRadius: '24px', fontWeight: 'bold', fontSize: '1.1rem', padding: '14px 36px', background: '#1b2a58', color: '#fff', border: 'none' }} onClick={() => setShowModal(true)}>
+              注文書作成
+            </button>
+            <div className="sort-buttons" style={{ marginTop: 10, display: 'flex', gap: 8 }}>
+              <button className="sort-button ascending" style={{ background: '#e57d94', color: '#fff', borderRadius: '16px', border: 'none', padding: '6px 18px', fontWeight: 'bold' }} onClick={() => setSortOrder('asc')}>昇順</button>
+              <button className="sort-button descending" style={{ background: '#7ec6ee', color: '#fff', borderRadius: '16px', border: 'none', padding: '6px 18px', fontWeight: 'bold' }} onClick={() => setSortOrder('desc')}>降順</button>
             </div>
           </div>
         </div>
+        {/* 顧客選択モーダル */}
+        <CustomerSelectModal
+          visible={showModal}
+          onClose={() => setShowModal(false)}
+          onSelect={setSelectedCustomer}
+        />
 
         <table className="order-table">
           <thead>
