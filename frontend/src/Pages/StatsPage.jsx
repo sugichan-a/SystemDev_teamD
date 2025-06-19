@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import Button from '../components/Button';
-
-import Button from '../components/Button';
  
 const initialCustomerData = [
 
@@ -168,9 +166,10 @@ const StatsPage = () => {
 
     setData(sorted);
 
-  // Excelアップロードボタン（ダミー）
+  
   };
  
+
 
 
   const handleExcelUpload = () => {
@@ -203,14 +202,6 @@ const StatsPage = () => {
         <Button onClick={() => navigate('/deliveries')}>納品管理</Button>
         <Button onClick={() => navigate('/stats')}>統計情報管理</Button>
       </div>
-
-
-      {/* ナビゲーションボタン */}
-<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-<Button onClick={() => navigate('/orders')}>受注管理</Button>
-<Button onClick={() => navigate('/deliveries')}>納品管理</Button>
-<Button onClick={() => navigate('/stats')}>統計情報管理</Button>
-</div>
  
       {/* 検索条件 */}
 <div className="bg-gray-400 p-4 text-white text-center text-lg font-semibold rounded">
