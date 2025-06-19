@@ -8,6 +8,8 @@ const Breadcrumbs = () => {
 
   // 表示名マッピング
   const displayNameMap = {
+    login: 'ログイン',
+    home: 'ホーム',
     orders: '受注管理',
     create: '注文書作成',
     edit: '注文書編集',
@@ -16,32 +18,60 @@ const Breadcrumbs = () => {
     customers: '顧客情報',
   };
 
-  const breadcrumbItems = paths.map((segment, index) => {
-    const isLast = index === paths.length - 1;
-    const pathSlice = paths.slice(0, index + 1);
-    const routePath = '/' + pathSlice.join('/');
-
-    // ID部分は除外（edit/:id など）
-    const label = displayNameMap[segment] || (segment.match(/^\d+$/) ? '詳細' : segment);
-
+  // 最初のページがloginなら「ログイン」だけ表示
+  if (location.pathname === '/login' || location.pathname === '/') {
     return (
-      <span key={routePath} className="flex items-center gap-1">
-        {!isLast ? (
-          <>
-            <Link to={routePath} className="text-blue-600 hover:underline">{label}</Link>
-            <ChevronRight className="inline w-4 h-4 text-gray-400" />
-          </>
-        ) : (
-          <span className="text-gray-500">{label}</span>
-        )}
+      <nav className="text-sm text-gray-700 flex items-center gap-1 mb-4">
+        <span className="text-blue-600">ログイン</span>
+      </nav>
+    );
+  }
+
+  // パンくずリストの階層を「ログイン > ホーム > ...」に強制
+  let breadcrumbItems = [];
+  let accumulatedPath = '';
+  // 先頭は必ずログイン
+  breadcrumbItems.push(
+    <span key="/login" className="flex items-center gap-1">
+      <Link to="/login" className="text-blue-600 hover:underline">ログイン</Link>
+      <ChevronRight className="inline w-4 h-4 text-gray-400" />
+    </span>
+  );
+  // 2番目は必ずホーム（to="/home"に統一）
+  if (paths[0] === 'home' || paths.length === 0) {
+    breadcrumbItems.push(
+      <span key="/home" className="text-gray-500">ホーム</span>
+    );
+  } else {
+    breadcrumbItems.push(
+      <span key="/home" className="flex items-center gap-1">
+        <Link to="/home" className="text-blue-600 hover:underline">ホーム</Link>
+        <ChevronRight className="inline w-4 h-4 text-gray-400" />
       </span>
     );
-  });
+    // 3番目以降
+    paths.forEach((segment, index) => {
+      if (segment === 'home') return; // 既にホームは追加済み
+      accumulatedPath += '/' + segment;
+      const isLast = index === paths.length - 1;
+      const label = displayNameMap[segment] || (segment.match(/^[0-9]+$/) ? '詳細' : segment);
+      breadcrumbItems.push(
+        <span key={accumulatedPath} className="flex items-center gap-1">
+          {isLast ? (
+            <span className="text-gray-500">{label}</span>
+          ) : (
+            <>
+              <Link to={accumulatedPath} className="text-blue-600 hover:underline">{label}</Link>
+              <ChevronRight className="inline w-4 h-4 text-gray-400" />
+            </>
+          )}
+        </span>
+      );
+    });
+  }
 
   return (
     <nav className="text-sm text-gray-700 flex items-center gap-1 mb-4">
-      <Link to="/" className="text-blue-600 hover:underline">ホーム</Link>
-      {paths.length > 0 && <ChevronRight className="inline w-4 h-4 text-gray-400" />}
       {breadcrumbItems}
     </nav>
   );

@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import HeaderNav from './components/HeaderNav';
 
 // ページをインポート
 import HomePage from './Pages/HomePage';
@@ -13,14 +14,17 @@ import StatsPage from './Pages/StatsPage';
 import CustomerPage from './Pages/CustomerPage';
 import LoginPage from './Pages/Login';
 
-
 const App = () => {
   return (
     <Router>
-      <div className="p-4"> {/* 全体のレイアウトラッパー */}
-        
+      <HeaderNav />
+      <div className="p-4">
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          {/* ✅ 初期画面は /login にリダイレクト */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/orders" element={<OrderListPage />} />
           <Route path="/orders/create" element={<OrderCreatePage />} />
           <Route path="/orders/edit/:id" element={<OrderEditPage />} />
