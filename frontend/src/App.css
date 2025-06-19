@@ -160,83 +160,103 @@ body {
   border: 2px solid #1b2a58;
 }
 
-/* --- 検索フォーム --- */
+/* --- 検索フォーム（画像のような大きさ・配置・配色） --- */
 .search-form {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(229, 125, 148, 0.08);
+  padding: 0;
+  margin-bottom: 32px;
+  border: none;
+  max-width: 980px;
+  min-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+}
+.search-form-table {
   width: 100%;
-  max-width: 700px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  border-collapse: collapse;
 }
-
+.search-form-table th, .search-form-table td {
+  padding: 18px 24px;
+  font-size: 1.08rem;
+  text-align: left;
+  border-bottom: 1.5px solid #f4f4f4;
+  vertical-align: middle;
+}
+.search-form-table th {
+  font-weight: bold;
+  color: #1b2a58;
+  width: 120px;
+  background: #fff;
+}
+.search-form-table tr:last-child th, .search-form-table tr:last-child td {
+  border-bottom: none;
+}
 .search-form input[type="text"] {
-  width: 500px;
-  /* ← 小さめに調整 */
-  align-self: center;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  width: 80%;
+  min-width: 260px;
+  max-width: 520px;
+  padding: 13px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #f4f4f4;
+  font-size: 1.08rem;
+  color: #2d2d4b;
+  margin-left: 0;
 }
-
 .search-form input[type="date"] {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #e57d94;
+  color: #fff;
+  font-size: 1.08rem;
+  width: 170px;
+  text-align: center;
+  letter-spacing: 0.1em;
 }
-
+.search-form input[type="date"]:focus {
+  outline: 2px solid #e57d94;
+  background: #d14c7b;
+}
 .date-range {
   display: flex;
-  justify-content: center;
-  /* 中央ぞろえ */
   gap: 12px;
-  /* 各入力の間隔 */
-  flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-start;
+  width: 100%;
 }
-
-.date-range input[type="date"] {
-  width: 150px;
-  /* ← やや広めに設定 */
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  background-color: #fff;
-  color: #333;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  transition: border-color 0.2s;
-}
-
-.date-range input[type="date"]:focus {
-  border-color: #1b2a58;
-  outline: none;
-}
-
 .status-filters {
   display: flex;
-  justify-content: center;
-  /* 横中央ぞろえ */
-  gap: 24px;
-  /* 等間隔 */
-  flex-wrap: wrap;
+  gap: 32px;
+  align-items: center;
 }
-
+.status-filters label {
+  font-weight: normal;
+  color: #2d2d4b;
+  font-size: 1.05rem;
+}
+.search-form-bottom {
+  background: #fff;
+  padding: 24px 0 24px 0;
+  display: flex;
+  justify-content: center;
+}
 .search-button {
-  background-color: #1b2a58;
-  color: white;
+  background: #1b2a58;
+  color: #fff;
   border: none;
-  padding: 10px 15px;
-  border-radius: 8px;
-  cursor: pointer;
+  border-radius: 22px;
+  font-size: 1.08rem;
   font-weight: bold;
-  width: fit-content;
-  align-self: center;
-  /* ボタンの中央寄せ */
+  padding: 14px 0;
+  width: 320px;
+  transition: background 0.2s;
+}
+.search-button:hover {
+  background: #23306e;
 }
 
 /* --- アクションボタン --- */
@@ -282,173 +302,135 @@ body {
 .order-table {
   width: 100%;
   max-width: 900px;
-  background-color: #fff;
+  background: #fff;
   border-collapse: collapse;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(229, 125, 148, 0.10);
   margin-bottom: 20px;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .order-table th,
 .order-table td {
-  border: 1px solid #ddd;
+  border: 1px solid #e5e7eb;
   padding: 12px;
   text-align: center;
+  font-size: 1rem;
 }
 
 .order-table thead {
-  background-color: #eee;
+  background: #f8bfc9;
+  color: #1b2a58;
   font-weight: bold;
 }
 
-/* --- 注文状態バッジ --- */
+.order-table .mini-button {
+  background: #e57d94;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  margin-right: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 1px 4px rgba(229, 125, 148, 0.10);
+}
+
+.order-table .mini-button:last-child {
+  margin-right: 0;
+}
+
+.order-table .mini-button:hover {
+  background: #d14c7b;
+}
+
+/* --- メインボタン --- */
+.primary-button,
+.csm-create-btn {
+  background: #e57d94;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(229, 125, 148, 0.10);
+}
+
+.primary-button:hover,
+.csm-create-btn:hover {
+  background: #d14c7b;
+}
+
+.csm-cancel-btn {
+  background: #e5e7eb;
+  color: #2d2d4b;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.csm-cancel-btn:hover {
+  background: #d1d5db;
+}
+
+/* --- ボタン共通 --- */
+.primary-button, .csm-create-btn, .order-table .mini-button, .pagination button, .csm-cancel-btn {
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, border 0.2s;
+}
+.primary-button:active, .csm-create-btn:active, .order-table .mini-button:active, .pagination button:active, .csm-cancel-btn:active {
+  box-shadow: 0 0 0 3px #fde7ed;
+  filter: brightness(0.97);
+}
+.primary-button:focus, .csm-create-btn:focus, .order-table .mini-button:focus, .pagination button:focus, .csm-cancel-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px #e57d94;
+}
+
+.primary-button:hover, .csm-create-btn:hover, .order-table .mini-button:hover, .pagination button:hover {
+  background: #d14c7b;
+  color: #fff;
+}
+.csm-cancel-btn:hover {
+  background: #d1d5db;
+  color: #2d2d4b;
+}
+
+/* --- 注文状態ラベル --- */
 .badge {
   display: inline-block;
-  /* 要素をインラインブロックに */
-  padding: 0.25em 0.5em;
-  /* もともとの余白 */
-  border-radius: 0.5em;
-  /* 角丸 */
-  font-size: 0.875rem;
-  /* 文字サイズ */
+  padding: 0.4em 1.6em;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: bold;
   color: #fff;
-  /* 文字色 */
-  white-space: nowrap;
-  /* テキストを折り返さない */
   text-align: center;
-  /* 中央揃え */
   min-width: 6em;
-  /* ← 追加：最小幅を指定（6em=文字幅×6） */
-  font-weight: bold;
+  margin: 0 auto;
+  transition: box-shadow 0.2s, filter 0.2s;
+  cursor: pointer;
 }
-
-/* ── ステータス別の色定義 ── */
-.badge.納品待ち {
-  background-color: #999;
+.badge:hover, .badge.selected {
+  box-shadow: 0 0 0 3px #fde7ed;
+  filter: brightness(0.97);
 }
-
-.badge.納品済 {
-  background-color: #68a8e0;
-}
-
-.badge.削除済 {
-  background-color: #f87171;
-}
-
-.badge.キャンセル済 {
-  background-color: #f87171;
-  white-space: nowrap;
-  /* ← こちらにも明示追加しておくと安心 */
-}
-
 .badge.未納品 {
-  background-color: #f48484;
+  background: #e57d94;
 }
-
-/* --- ページネーション --- */
-.pagination {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
+.badge.納品済 {
+  background: #7ec6ee;
 }
-
-.pagination button {
-  padding: 6px 12px;
-  background-color: #f8bfc9;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
+.badge.キャンセル済 {
+  background: #e57d94;
 }
-
-/* カラムレイアウト（全体） */
-.column-layout {
-  margin: 100px auto 0 auto;
-  /* ← 上余白だけ 100px、左右は中央寄せ */
-  max-width: 960px;
-  text-align: left;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* テーブル内の操作ボタンも統一 */
-.order-table button {
-  background-color: #f8bfc9;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* 全体の文字寄せも統一したいとき */
-.order-table td,
-.order-table th {
-  text-align: center;
-}
-
-/* ── ミニボタン定義 ── */
-.mini-button {
-  display: inline-block;         /* インラインブロックにしてサイズ指定可能に */
-  background-color: #fff;        /* 白背景 */
-  color: #333;                   /* 濃いグレー文字 */
-  border: 1px solid #ccc;        /* 薄いグレーの境界線 */
-  border-radius: 0.25em;         /* 少し丸みを帯びた角 */
-  padding: 0.25em 0.5em;         /* 上下 0.25em・左右 0.5em */
-  font-size: 0.75rem;            /* 小さめフォント */
-  cursor: pointer;               /* ホバー時ポインターに */
-  margin-right: 0.5em;           /* ボタン間の余白 */
-  white-space: nowrap;           /* テキスト折り返し禁止 */
-  text-align: center;            /* ラベル中央寄せ */
-}
-
-/* ── ホバー時のエフェクト ── */
-.mini-button:hover {
-  background-color: #f5f5f5;     /* 背景をほんのりグレーに */
-}
-
-/* — ソートボタンまわり */
-.actions-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.sort-buttons {
-  display: flex;
-  gap: 8px;
-}
-
-.sort-buttons {
-  display: flex;
-  gap: 8px;
-  order: 2;
-  margin-top: -4px;
-}
-
-/* 昇順：赤系, 降順：青系 */
-.sort-button.ascending {
-  background-color: #f48484;
-  color: white;
-}
-.sort-button.descending {
-  background-color: #68a8e0;
-  color: white;
-}
-
-/* 選択中は内側にアクセント枠を追加 */
-.sort-button.active {
-  box-shadow: inset 0 0 0 2px #1b2a58;
-}
-
-.right-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-}
-.primary {
-  order: 1;
+.badge.削除済 {
+  background: #999;
 }
