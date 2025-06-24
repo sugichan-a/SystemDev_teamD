@@ -343,7 +343,9 @@ body {
 }
 
 .order-table .mini-button:hover {
-  background: #d14c7b;
+  background: #23306e;
+  color: #fff;
+  transition: background 0.2s, color 0.2s;
 }
 
 /* --- メインボタン --- */
@@ -433,4 +435,33 @@ body {
 }
 .badge.削除済 {
   background: #999;
+}
+
+.selected-row {
+  background: #e6f0fa !important;
+  transition: background 0.2s;
+}
+
+/* --- 受注管理画面の注文日入力欄 --- */
+.order-date-input {
+  border: none;
+  background: #e57d94;
+  border-radius: 22px;
+  padding: 10px 32px;
+  font-size: 1.15rem;
+  color: #fff;
+  width: 200px;
+  text-align: center;
+  letter-spacing: 0.1em;
+  font-weight: bold;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+.order-date-input:focus {
+  outline: 2px solid #fff;
+  background: #d14c7b;
+}
+.order-date-input::placeholder {
+  color: #fff;
+  opacity: 0.7;
 }
