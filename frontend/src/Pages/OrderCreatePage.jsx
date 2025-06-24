@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import '../App.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Breadcrumbs from '../components/breadcrumbs';
 import NavButton from '../components/button/NavButton';
+import { useOrderContext } from '../contexts/OrderContext';
 
 const initialCustomer = {
   name: 'フラワーショップブルーム',
@@ -13,12 +14,20 @@ const initialRows = [
   { id: 1, name: '医療情報技師 医学医療編', quantity: 5, price: 2500, code: '987-486705138' },
 ];
 
+const getToday = () => {
+  const d = new Date();
+  return d.toISOString().slice(0, 10);
+};
+
 const OrderCreatePage = () => {
-  const [customer] = useState(initialCustomer);
-  const [date, setDate] = useState('');
+  const location = useLocation();
+  const customerFromState = location.state && location.state.customer;
+  const [customer] = useState(customerFromState || initialCustomer);
+  const [date, setDate] = useState(getToday());
   const [rows, setRows] = useState(initialRows);
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
+  const { addOrder } = useOrderContext();
 
   const handleAddRow = () => {
     setRows([...rows, { id: Date.now(), name: '', quantity: 1, price: '', code: '' }]);
@@ -38,6 +47,37 @@ const OrderCreatePage = () => {
     setRows(rows.map(r => r.id === id ? { ...r, [key]: value } : r));
   };
   const total = rows.reduce((sum, r) => sum + (Number(r.price) * Number(r.quantity) || 0), 0);
+
+  const validate = () => {
+    if (!date) {
+      window.alert('受注日付を入力してください。');
+      return false;
+    }
+    if (rows.length === 0) {
+      window.alert('商品を1件以上追加してください。');
+      return false;
+    }
+    for (const row of rows) {
+      if (!row.name || !row.quantity || !row.price) {
+        window.alert('商品名・数量・単価はすべて入力してください。');
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const handleCreateOrder = () => {
+    if (!validate()) return;
+    const newOrder = {
+      id: Date.now(),
+      name: customer.name,
+      date: date,
+      status: '未納品',
+      rows: [...rows],
+    };
+    addOrder(newOrder);
+    navigate('/orders');
+  };
 
   return (
     <div className="App" style={{ background: '#F9DDE2', minHeight: '100vh' }}>
@@ -63,14 +103,18 @@ const OrderCreatePage = () => {
             <div style={{ flex: 1 }}>
               <div style={{ color: '#888', fontWeight: 500, fontSize: 15 }}>受注日付</div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 6 }}>
-                <input type="date" value={date} onChange={e => setDate(e.target.value)} style={{ border: 'none', background: '#F9DDE2', borderRadius: 8, padding: '8px 16px', fontSize: 16, width: 140, marginRight: 8 }} />
-                <span style={{ color: '#e57d94', fontSize: 24, fontWeight: 'bold' }}>📅</span>
+                <input
+                  type="date"
+                  value={date}
+                  onChange={e => setDate(e.target.value)}
+                  className="order-date-input"
+                />
               </div>
             </div>
           </div>
         </div>
         {/* 商品テーブル・操作ボタン */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '32px 0 8px 0', maxWidth: 900, marginLeft: 'auto', marginRight: 'auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 200, margin: '32px 0 8px 0', maxWidth: 900, marginLeft: 'auto', marginRight: 'auto' }}>
           <button onClick={handleDeleteSelected} style={{ background: '#E57D94', color: '#fff', border: 'none', borderRadius: 22, padding: '8px 32px', fontWeight: 'bold', fontSize: 16, marginLeft: 0, transition: 'background 0.2s' }} disabled={selected.length === 0}>選んだ項目を削除</button>
           <button onClick={handleAddRow} style={{ background: '#E57D94', color: '#fff', border: 'none', borderRadius: 22, padding: '8px 32px', fontWeight: 'bold', fontSize: 16, marginRight: 0, transition: 'background 0.2s' }}>商品を追加</button>
         </div>
@@ -113,10 +157,10 @@ const OrderCreatePage = () => {
           </table>
         </div>
         {/* 合計金額・作成ボタン */}
-        <div style={{ maxWidth: 900, margin: '32px auto 0', textAlign: 'right' }}>
-          <div style={{ fontWeight: 'bold', fontSize: 18, color: '#2d2d4b', marginBottom: 18 }}>合計金額: <span style={{ color: '#E57D94', fontSize: 22 }}>{total.toLocaleString()} 円</span></div>
+        <div style={{ maxWidth: 900, margin: '32px auto 0' }}>
+          <div style={{ fontWeight: 'bold', fontSize: 18, color: '#2d2d4b', marginBottom: 18, textAlign: 'center' }}>合計金額: <span style={{ color: '#E57D94', fontSize: 22 }}>{total.toLocaleString()} 円</span></div>
           <div style={{ textAlign: 'center', marginTop: 32 }}>
-            <button style={{ background: '#1B2A58', color: '#fff', border: 'none', borderRadius: 22, padding: '12px 48px', fontWeight: 'bold', fontSize: 18, letterSpacing: 1, boxShadow: '0 2px 8px #1b2a5810', transition: 'background 0.2s' }} onClick={() => alert('作成処理（仮）')}>この内容で作成する</button>
+            <button style={{ background: '#1B2A58', color: '#fff', border: 'none', borderRadius: 22, padding: '12px 48px', fontWeight: 'bold', fontSize: 18, letterSpacing: 1, boxShadow: '0 2px 8px #1b2a5810', transition: 'background 0.2s' }} onClick={handleCreateOrder}>この内容で作成する</button>
           </div>
         </div>
       </div>

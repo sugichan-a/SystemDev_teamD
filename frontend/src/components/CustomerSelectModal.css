@@ -79,6 +79,19 @@
   box-shadow: 0 1px 4px rgba(229, 125, 148, 0.06);
   gap: 18px;
 }
+.csm-list-item.csm-selected {
+  background: #e6f0fa;
+  box-shadow: 0 0 0 2px #1b2a58;
+}
+.csm-list-item:hover {
+  background: #f0f6ff;
+  transition: background 0.2s;
+}
+.csm-list-item.csm-selected .csm-customer-btn.primary-button {
+  background: #23306e;
+  color: #fff;
+  box-shadow: 0 0 0 3px #1b2a58;
+}
 .csm-list-name {
   font-weight: bold;
   color: #2d2d4b;
