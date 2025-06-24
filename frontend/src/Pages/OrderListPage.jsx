@@ -160,7 +160,7 @@ const OrderListPage = () => {
                         style={{ background: '#e57d94', color: '#fff', borderRadius: '16px', border: 'none', padding: '4px 12px', minWidth: 36, fontWeight: 'bold', fontSize: 13, cursor: 'pointer', transition: 'background 0.2s' }}
                         onMouseOver={e => e.currentTarget.style.background = '#c95d7a'}
                         onMouseOut={e => e.currentTarget.style.background = '#e57d94'}
-                        onClick={() => navigate('/orders/edit/:id', { state: { order: item } })}
+                        onClick={() => navigate('/orders/edit', { state: { order: item } })}
                       >編集</button>
                     </div>
                   </td>
@@ -170,7 +170,9 @@ const OrderListPage = () => {
           </table>
         </div>
 
-        <div className="pagination"><button>1</button><span>/</span><button>2</button></div>
+        <div className="pagination">
+          <button className="active">1</button><span>/</span><button>2</button>
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './CustomerSelectModal.css';
 
 const customers = [
@@ -14,7 +13,6 @@ const customers = [
 const CustomerSelectModal = ({ visible, onClose, onSelect }) => {
   const [search, setSearch] = useState('');
   const [selectedId, setSelectedId] = useState(null);
-  const navigate = useNavigate();
   const filtered = customers.filter(c =>
     c.name.includes(search) || c.person.includes(search)
   );
@@ -35,7 +33,7 @@ const CustomerSelectModal = ({ visible, onClose, onSelect }) => {
             <li
               key={c.id}
               className={`csm-list-item${selectedId === c.id ? ' csm-selected' : ''}`}
-              onClick={() => { setSelectedId(c.id); onSelect(c); }}
+              onClick={() => setSelectedId(c.id)}
               style={{ cursor: 'pointer' }}
             >
               <span className="csm-list-name">{c.name}</span>
@@ -53,7 +51,7 @@ const CustomerSelectModal = ({ visible, onClose, onSelect }) => {
             onClick={() => {
               const selectedCustomer = customers.find(c => c.id === selectedId);
               if (selectedCustomer) {
-                navigate('/orders/create', { state: { customer: selectedCustomer } });
+                onSelect(selectedCustomer);
               }
             }}
             disabled={selectedId === null}
