@@ -1,16 +1,25 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Button from '../Button';
+import StoreInfo from './StoreInfo';
 
 const HeaderNav = () => {
-  const navigate = useNavigate();
-
   return (
-    <div className="flex gap-4 bg-gray-100 px-6 py-3 border-b mb-4">
-      <Button onClick={() => navigate('/orders')}>受注管理</Button>
-      <Button onClick={() => navigate('/deliveries')}>納品管理</Button>
-      <Button onClick={() => navigate('/stats')}>統計情報管理</Button>
-    </div>
+    <header
+      style={{
+        width: '100%',
+        height: 56,
+        background: '#1A2550',
+        color: '#fff',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end', // 右寄せ
+        padding: '0 32px',
+        fontSize: 18,
+        fontWeight: 500,
+        letterSpacing: 1,
+      }}
+    >
+      <StoreInfo />
+    </header>
   );
 };
 
