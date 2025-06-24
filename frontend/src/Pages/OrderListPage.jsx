@@ -59,6 +59,13 @@ const OrderListPage = () => {
       : new Date(b.date) - new Date(a.date)
     );
 
+  const handleCustomerSelect = (customer) => {
+    setShowModal(false);
+    setSelectedCustomer(customer);
+    // 顧客選択後にOrderCreatePageへ遷移し、顧客情報を渡す
+    navigate('/orders/create', { state: { customer } });
+  };
+
   return (
     <div className="App">
       <nav className="navbar"><div className="navbar-brand">Midorin</div></nav>
@@ -127,7 +134,7 @@ const OrderListPage = () => {
         <CustomerSelectModal
           visible={showModal}
           onClose={() => setShowModal(false)}
-          onSelect={setSelectedCustomer}
+          onSelect={handleCustomerSelect}
         />
 
         {/* 受注テーブル */}
