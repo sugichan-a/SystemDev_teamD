@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../App.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Breadcrumbs from '../components/breadcrumbs';
 import NavButton from '../components/button/NavButton';
-import { useOrderContext } from '../contexts/OrderContext';
+import { useDeliveryContext } from '../contexts/DeliveryContext';
 
 const initialCustomer = {
   name: 'フラワーショップブルーム',
@@ -19,15 +19,36 @@ const getToday = () => {
   return d.toISOString().slice(0, 10);
 };
 
-const OrderEditPage = () => {
+const DeliveryEditPage = () => {
   const location = useLocation();
-  const customerFromState = location.state && location.state.customer;
-  const [customer] = useState(customerFromState || initialCustomer);
-  const [date, setDate] = useState(getToday());
-  const [rows, setRows] = useState(initialRows);
+  const deliveryFromState = location.state && location.state.delivery;
+  const customerFromState = deliveryFromState ? { name: deliveryFromState.name } : (location.state && location.state.customer);
+  const [customer, setCustomer] = useState(customerFromState || initialCustomer);
+  const [date, setDate] = useState(deliveryFromState ? (deliveryFromState.date ? deliveryFromState.date.replace(/\//g, '-') : '') : '');
+  const [rows, setRows] = useState(deliveryFromState ? (deliveryFromState.rows || initialRows) : initialRows);
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
-  const { addOrder } = useOrderContext();
+  const { addDelivery, updateDelivery } = useDeliveryContext();
+
+  useEffect(() => {
+    if (deliveryFromState) {
+      setCustomer({ name: deliveryFromState.name });
+      if (deliveryFromState.date) {
+        const parts = deliveryFromState.date.split('/');
+        if (parts.length === 3) {
+          const yyyy = parts[0];
+          const mm = parts[1].padStart(2, '0');
+          const dd = parts[2].padStart(2, '0');
+          setDate(`${yyyy}-${mm}-${dd}`);
+        } else {
+          setDate(deliveryFromState.date);
+        }
+      } else {
+        setDate('');
+      }
+      setRows(deliveryFromState.rows || initialRows);
+    }
+  }, [deliveryFromState]);
 
   const handleAddRow = () => {
     setRows([...rows, { id: Date.now(), name: '', quantity: 1, price: '', code: '' }]);
@@ -46,11 +67,11 @@ const OrderEditPage = () => {
   const handleChange = (id, key, value) => {
     setRows(rows.map(r => r.id === id ? { ...r, [key]: value } : r));
   };
-  const total = rows.reduce((sum, r) => sum + (Number(r.price) * Number(r.quantity) || 0), 0);
+  const total = rows.reduce((sum, r) => sum + (r.status === 'キャンセル済' ? 0 : (Number(r.price) * Number(r.quantity) || 0)), 0);
 
   const validate = () => {
     if (!date) {
-      window.alert('受注日付を入力してください。');
+      window.alert('納品日付を入力してください。');
       return false;
     }
     if (rows.length === 0) {
@@ -66,17 +87,50 @@ const OrderEditPage = () => {
     return true;
   };
 
-  const handleCreateOrder = () => {
-    if (!validate()) return;
-    const newOrder = {
-      id: Date.now(),
+  // 選択項目キャンセル
+  const handleCancelSelected = () => {
+    if (selected.length === 0) {
+      window.alert('キャンセルする項目を選択してください。');
+      return;
+    }
+    if (!window.confirm('選択した商品をキャンセルしますか？')) return;
+    setRows(rows.map(r => selected.includes(r.id) ? { ...r, status: 'キャンセル済' } : r));
+    setSelected([]);
+  };
+
+  // 納品書自体をキャンセル
+  const handleCancelDelivery = () => {
+    if (!window.confirm('この納品書をキャンセルしますか？')) return;
+    const canceledDelivery = {
+      id: deliveryFromState ? deliveryFromState.id : Date.now(),
       name: customer.name,
       date: date,
-      status: '未納品',
+      status: 'キャンセル済',
       rows: [...rows],
     };
-    addOrder(newOrder);
-    navigate('/orders');
+    if (deliveryFromState) {
+      updateDelivery(canceledDelivery);
+    } else {
+      addDelivery(canceledDelivery);
+    }
+    navigate('/deliveries');
+  };
+
+  const handleSaveDelivery = () => {
+    if (!validate()) return;
+    const newDelivery = {
+      id: deliveryFromState ? deliveryFromState.id : Date.now(),
+      name: customer.name,
+      date: date,
+      status: '納品済',
+      rows: [...rows],
+    };
+    if (deliveryFromState) {
+      updateDelivery(newDelivery);
+    } else {
+      addDelivery(newDelivery);
+    }
+    navigate('/deliveries');
   };
 
   return (
@@ -89,7 +143,7 @@ const OrderEditPage = () => {
           <NavButton to="/deliveries">納品管理</NavButton>
           <NavButton to="/stats">統計情報管理</NavButton>
         </div>
-        {/* 注文作成フォーム */}
+        {/* 納品書作成フォーム */}
         <div style={{ background: '#fff', borderRadius: 16, padding: '28px 32px', margin: '32px auto 0', maxWidth: 900, boxShadow: '0 2px 12px #e57d9420' }}>
           <div style={{ display: 'flex', gap: 40, alignItems: 'center', marginBottom: 18 }}>
             <div style={{ flex: 1 }}>
@@ -101,7 +155,7 @@ const OrderEditPage = () => {
               <div style={{ fontWeight: 'bold', fontSize: 16, color: '#2d2d4b', textAlign: 'center', margin: '6px 0 0 0' }}>{customer.person}</div>
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ color: '#888', fontWeight: 500, fontSize: 15 }}>受注日付</div>
+              <div style={{ color: '#888', fontWeight: 500, fontSize: 15 }}>納品日付</div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 6 }}>
                 <input
                   type="date"
@@ -114,8 +168,9 @@ const OrderEditPage = () => {
           </div>
         </div>
         {/* 商品テーブル・操作ボタン */}
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 200, margin: '32px 0 8px 0', maxWidth: 900, marginLeft: 'auto', marginRight: 'auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16, margin: '32px 0 8px 0', maxWidth: 900, marginLeft: 'auto', marginRight: 'auto' }}>
           <button onClick={handleDeleteSelected} style={{ background: '#E57D94', color: '#fff', border: 'none', borderRadius: 22, padding: '8px 32px', fontWeight: 'bold', fontSize: 16, marginLeft: 0, transition: 'background 0.2s' }} disabled={selected.length === 0}>選んだ項目を削除</button>
+          <button onClick={handleCancelSelected} style={{ background: '#aaa', color: '#fff', border: 'none', borderRadius: 22, padding: '8px 32px', fontWeight: 'bold', fontSize: 16, transition: 'background 0.2s' }} disabled={selected.length === 0}>選んだ項目をキャンセル</button>
           <button onClick={handleAddRow} style={{ background: '#E57D94', color: '#fff', border: 'none', borderRadius: 22, padding: '8px 32px', fontWeight: 'bold', fontSize: 16, marginRight: 0, transition: 'background 0.2s' }}>商品を追加</button>
         </div>
         <div style={{ background: '#fff', borderRadius: 14, boxShadow: '0 2px 8px #e57d9410', maxWidth: 900, margin: '0 auto', overflow: 'hidden' }}>
@@ -134,33 +189,34 @@ const OrderEditPage = () => {
               {rows.map((row, idx) => (
                 <tr key={row.id} style={{ borderBottom: '1px solid #f3c1ce' }}>
                   <td style={{ textAlign: 'center' }}>
-                    <input type="checkbox" checked={selected.includes(row.id)} onChange={() => handleSelectRow(row.id)} />
+                    <input type="checkbox" checked={selected.includes(row.id)} onChange={() => handleSelectRow(row.id)} disabled={row.status === 'キャンセル済'} />
                   </td>
                   <td style={{ textAlign: 'left', fontWeight: 600, color: '#2d2d4b', fontSize: 15 }}>
-                    <input type="text" value={row.name} onChange={e => handleChange(row.id, 'name', e.target.value)} style={{ border: 'none', background: 'transparent', width: '100%', fontWeight: 600, color: '#2d2d4b', fontSize: 15 }} />
+                    <input type="text" value={row.name} onChange={e => handleChange(row.id, 'name', e.target.value)} style={{ border: 'none', background: 'transparent', width: '100%', fontWeight: 600, color: '#2d2d4b', fontSize: 15, textDecoration: row.status === 'キャンセル済' ? 'line-through' : 'none' }} disabled={row.status === 'キャンセル済'} />
                   </td>
                   <td style={{ textAlign: 'center' }}>
-                    <input type="number" min="1" value={row.quantity} onChange={e => handleChange(row.id, 'quantity', e.target.value)} style={{ border: 'none', background: 'transparent', width: 40, textAlign: 'center', fontSize: 15 }} />
+                    <input type="number" min="1" value={row.quantity} onChange={e => handleChange(row.id, 'quantity', e.target.value)} style={{ border: 'none', background: 'transparent', width: 40, textAlign: 'center', fontSize: 15, textDecoration: row.status === 'キャンセル済' ? 'line-through' : 'none' }} disabled={row.status === 'キャンセル済'} />
                   </td>
                   <td style={{ textAlign: 'center' }}>
-                    <input type="number" min="0" value={row.price} onChange={e => handleChange(row.id, 'price', e.target.value)} style={{ border: 'none', background: 'transparent', width: 70, textAlign: 'right', fontSize: 15 }} />
+                    <input type="number" min="0" value={row.price} onChange={e => handleChange(row.id, 'price', e.target.value)} style={{ border: 'none', background: 'transparent', width: 70, textAlign: 'right', fontSize: 15, textDecoration: row.status === 'キャンセル済' ? 'line-through' : 'none' }} disabled={row.status === 'キャンセル済'} />
                   </td>
                   <td style={{ textAlign: 'center', color: '#2d2d4b', fontSize: 15 }}>
-                    <input type="text" value={row.code} onChange={e => handleChange(row.id, 'code', e.target.value)} style={{ border: 'none', background: 'transparent', width: 110, fontSize: 15 }} />
+                    <input type="text" value={row.code} onChange={e => handleChange(row.id, 'code', e.target.value)} style={{ border: 'none', background: 'transparent', width: 110, fontSize: 15, textDecoration: row.status === 'キャンセル済' ? 'line-through' : 'none' }} disabled={row.status === 'キャンセル済'} />
                   </td>
                   <td style={{ textAlign: 'center' }}>
-                    <button onClick={() => handleDeleteRow(row.id)} style={{ background: '#E57D94', color: '#fff', border: 'none', borderRadius: 8, padding: '4px 16px', fontWeight: 'bold', fontSize: 14, cursor: 'pointer' }}>削除</button>
+                    <button onClick={() => handleDeleteRow(row.id)} style={{ background: '#E57D94', color: '#fff', border: 'none', borderRadius: 8, padding: '4px 16px', fontWeight: 'bold', fontSize: 14, cursor: 'pointer' }} disabled={row.status === 'キャンセル済'}>削除</button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        {/* 合計金額・作成ボタン */}
+        {/* 合計金額・保存/キャンセルボタン */}
         <div style={{ maxWidth: 900, margin: '32px auto 0' }}>
           <div style={{ fontWeight: 'bold', fontSize: 18, color: '#2d2d4b', marginBottom: 18, textAlign: 'center' }}>合計金額: <span style={{ color: '#E57D94', fontSize: 22 }}>{total.toLocaleString()} 円</span></div>
-          <div style={{ textAlign: 'center', marginTop: 32 }}>
-            <button style={{ background: '#1B2A58', color: '#fff', border: 'none', borderRadius: 22, padding: '12px 48px', fontWeight: 'bold', fontSize: 18, letterSpacing: 1, boxShadow: '0 2px 8px #1b2a5810', transition: 'background 0.2s' }} onClick={handleCreateOrder}>この内容で作成する</button>
+          <div style={{ textAlign: 'center', marginTop: 32, display: 'flex', justifyContent: 'center', gap: 32 }}>
+            <button style={{ background: '#1B2A58', color: '#fff', border: 'none', borderRadius: 22, padding: '12px 48px', fontWeight: 'bold', fontSize: 18, letterSpacing: 1, boxShadow: '0 2px 8px #1b2a5810', transition: 'background 0.2s' }} onClick={handleSaveDelivery}>この内容で保存する</button>
+            <button style={{ background: '#aaa', color: '#fff', border: 'none', borderRadius: 22, padding: '12px 48px', fontWeight: 'bold', fontSize: 18, letterSpacing: 1, boxShadow: '0 2px 8px #aaa8', transition: 'background 0.2s' }} onClick={handleCancelDelivery}>この納品書をキャンセルする</button>
           </div>
         </div>
       </div>
@@ -168,4 +224,4 @@ const OrderEditPage = () => {
   );
 };
 
-export default OrderEditPage;
+export default DeliveryEditPage;

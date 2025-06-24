@@ -2,28 +2,26 @@ import React, { useState } from 'react';
 import '../App.css';
 import Breadcrumbs from '../components/breadcrumbs';
 import NavButton from '../components/button/NavButton';
+import CustomerSelectModal from '../components/CustomerSelectModal';
+import { useNavigate } from 'react-router-dom';
+import { useDeliveryContext } from '../contexts/DeliveryContext';
 
 const DeliveryListPage = () => {
-  const initialData = [
-    { id: 1, name: 'フラワーショップブルーム', date: '2025/6/7',  status: '未納品' },
-    { id: 2, name: 'ブックカフェ ライブラリー', date: '2025/5/11', status: '納品済' },
-    { id: 3, name: '森本友香',               date: '2025/4/30', status: '納品済' },
-    { id: 4, name: 'コーヒーラウンジ レイユ', date: '2025/1/7',  status: '納品済' },
-    { id: 5, name: '木原パオロ隼人',         date: '2024/12/7', status: 'キャンセル済' },
-    { id: 6, name: 'キューズモール森ノ宮',   date: '2024/8/7',  status: '削除済' }
-  ];
-  const [ordersData, setOrdersData] = useState(initialData);
+  const { deliveries, removeDeliveries } = useDeliveryContext();
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [nameFilter, setNameFilter] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [statusFilters, setStatusFilters] = useState({
-    '未納品': false,
-    '納品済': false,
+    '未配達': false,
+    '配達済': false,
     'キャンセル済': false,
     '削除済': false,
   });
   const [sortOrder, setSortOrder] = useState('desc');
+  const [showModal, setShowModal] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const navigate = useNavigate();
 
   const toggleSelectAll = () => {
     if (selectedIds.size === filteredData.length) setSelectedIds(new Set());
@@ -35,14 +33,17 @@ const DeliveryListPage = () => {
     setSelectedIds(newSet);
   };
   const deleteSelected = () => {
-    setOrdersData(prev => prev.filter(item => !selectedIds.has(item.id)));
-    setSelectedIds(new Set());
+    if (!selectedIds.size) return;
+    if (window.confirm('選択した納品書を削除しますか？')) {
+      removeDeliveries(Array.from(selectedIds));
+      setSelectedIds(new Set());
+    }
   };
   const toggleStatus = status => {
     setStatusFilters(prev => ({ ...prev, [status]: !prev[status] }));
   };
 
-  const filteredData = ordersData
+  const filteredData = deliveries
     .filter(item => {
       if (nameFilter && !item.name.includes(nameFilter)) return false;
       if (dateFrom && item.date < dateFrom) return false;
@@ -68,50 +69,113 @@ const DeliveryListPage = () => {
           <NavButton to="/stats">統計情報管理</NavButton>
         </div>
 
-        <div className="search-form">
-          <input type="text" placeholder="顧客名" value={nameFilter} onChange={e => setNameFilter(e.target.value)} />
-          <div className="date-range">
-            <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} /> ～ <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} />
+        <form className="search-form" onSubmit={e => e.preventDefault()}>
+          <table className="search-form-table">
+            <tbody>
+              <tr>
+                <th><label htmlFor="customerName">顧客名</label></th>
+                <td><input id="customerName" type="text" value={nameFilter} onChange={e => setNameFilter(e.target.value)} /></td>
+              </tr>
+              <tr>
+                <th><label htmlFor="dateFrom">受注日付</label></th>
+                <td>
+                  <div className="date-range">
+                    <input id="dateFrom" type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} className="order-date-input" />
+                    <span style={{fontWeight:'bold', color:'#2d2d4b', fontSize:'1.2em'}}>～</span>
+                    <input id="dateTo" type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} className="order-date-input" />
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th>注文状態</th>
+                <td>
+                  <div className="status-filters">
+                    {Object.keys(statusFilters).map(status => (
+                      <label key={status}><input type="checkbox" checked={statusFilters[status]} onChange={() => toggleStatus(status)} /> {status}</label>
+                    ))}
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="search-form-bottom">
+            <button className="search-button" type="submit">この条件で検索する</button>
           </div>
-          <div className="status-filters">
-            {Object.keys(statusFilters).map(status => (
-              <label key={status}><input type="checkbox" checked={statusFilters[status]} onChange={() => toggleStatus(status)} /> {status}</label>
-            ))}
-          </div>
-          <button className="search-button" onClick={e => e.preventDefault()}>この条件で検索する</button>
-        </div>
+        </form>
 
-        <div className="action-buttons">
-          <button className="danger" onClick={deleteSelected}>選んだ項目を削除</button>
-          <div className="right-actions">
-            <button className="primary">納品書作成</button>
-            <div className="sort-buttons">
-              <button className={`sort-button ascending ${sortOrder==='asc'? 'active':''}`} onClick={() => setSortOrder('asc')}>昇順</button>
-              <button className={`sort-button descending ${sortOrder==='desc'? 'active':''}`} onClick={() => setSortOrder('desc')}>降順</button>
+        <div className="action-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%', maxWidth: 800, margin: '40px auto 0 auto' }}>
+          {/* 左側：削除ボタン */}
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
+            <button className="danger" style={{ borderRadius: '24px', fontWeight: 'bold', fontSize: '1.1rem', padding: '14px 36px', background: '#e57d94', color: '#fff', border: 'none' }} onClick={deleteSelected}>
+              選んだ項目を削除
+            </button>
+          </div>
+          {/* 右側：納品書作成＋ソート */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
+            <button className="primary-button" style={{ borderRadius: '24px', fontWeight: 'bold', fontSize: '1.1rem', padding: '14px 36px', background: '#1b2a58', color: '#fff', border: 'none' }} onClick={() => setShowModal(true)}>
+              納品書作成
+            </button>
+            <div className="sort-buttons" style={{ marginTop: 10, display: 'flex', gap: 8 }}>
+              <button className="sort-button ascending" style={{ background: '#e57d94', color: '#fff', borderRadius: '16px', border: 'none', padding: '6px 18px', fontWeight: 'bold' }} onClick={() => setSortOrder('asc')}>昇順</button>
+              <button className="sort-button descending" style={{ background: '#7ec6ee', color: '#fff', borderRadius: '16px', border: 'none', padding: '6px 18px', fontWeight: 'bold' }} onClick={() => setSortOrder('desc')}>降順</button>
             </div>
           </div>
         </div>
 
-        <table className="order-table">
-          <thead>
-            <tr>
-              <th><input type="checkbox" checked={filteredData.length>0 && selectedIds.size===filteredData.length} onChange={toggleSelectAll} /></th>
-              <th>顧客名</th><th>受注日</th><th>注文状態</th><th>明細</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData.map(item=> (
-              <tr key={item.id}>
-                <td><input type="checkbox" checked={selectedIds.has(item.id)} onChange={()=>toggleSelectId(item.id)} /></td>
-                <td>{item.name}</td><td>{item.date}</td>
-                <td><span className={`badge ${item.status}`}>{item.status}</span></td>
-                <td><button className="mini-button">出力</button><button className="mini-button">編集</button></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {/* 顧客選択モーダル */}
+        <CustomerSelectModal
+          visible={showModal}
+          onClose={() => setShowModal(false)}
+          onSelect={customer => {
+            setSelectedCustomer(customer);
+            setShowModal(false);
+            navigate('/deliveries/create', { state: { customer } });
+          }}
+        />
 
-        <div className="pagination"><button>1</button><span>/</span><button>2</button></div>
+        {/* 納品テーブル */}
+        <div style={{ background: '#fff', borderRadius: 14, boxShadow: '0 2px 8px #e57d9410', maxWidth: 900, margin: '32px auto 0', overflow: 'hidden' }}>
+          <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0 }}>
+            <thead style={{ background: '#F3F3F6' }}>
+              <tr>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 60 }}><input type="checkbox" checked={filteredData.length>0 && selectedIds.size===filteredData.length} onChange={toggleSelectAll} /></th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center' }}>顧客名</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 120 }}>納品日</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 120 }}>配達状況</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 120 }}>明細</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.map(item=> (
+                <tr key={item.id} className={selectedIds.has(item.id) ? 'selected-row' : ''} style={{ borderBottom: '1px solid #f3c1ce' }}>
+                  <td style={{ textAlign: 'center', padding: '10px 8px' }}><input type="checkbox" checked={selectedIds.has(item.id)} onChange={()=>toggleSelectId(item.id)} /></td>
+                  <td style={{ textAlign: 'left', fontWeight: 600, color: '#2d2d4b', fontSize: 15, padding: '10px 8px' }}>{item.name}</td>
+                  <td style={{ textAlign: 'center', color: '#2d2d4b', fontSize: 15, padding: '10px 8px' }}>{item.date}</td>
+                  <td style={{ textAlign: 'center', padding: '10px 8px' }}><span className={`badge ${item.status}`}>{item.status === '未納品' ? '未配達' : item.status === '納品済' ? '配達済' : item.status}</span></td>
+                  <td style={{ textAlign: 'center', padding: '10px 8px' }}>
+                    <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+                      <button
+                        style={{ background: '#7ec6ee', color: '#fff', borderRadius: '16px', border: 'none', padding: '4px 12px', minWidth: 36, fontWeight: 'bold', fontSize: 13, cursor: 'pointer', transition: 'background 0.2s' }}
+                        onMouseOver={e => e.currentTarget.style.background = '#5fa6c9'}
+                        onMouseOut={e => e.currentTarget.style.background = '#7ec6ee'}
+                      >出力</button>
+                      <button
+                        style={{ background: '#e57d94', color: '#fff', borderRadius: '16px', border: 'none', padding: '4px 12px', minWidth: 36, fontWeight: 'bold', fontSize: 13, cursor: 'pointer', transition: 'background 0.2s' }}
+                        onMouseOver={e => e.currentTarget.style.background = '#c95d7a'}
+                        onMouseOut={e => e.currentTarget.style.background = '#e57d94'}
+                        onClick={() => navigate('/deliveries/edit', { state: { delivery: item, customer: { name: item.name }, date: item.date } })}
+                      >編集</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="pagination">
+          <button className="active">1</button><span>/</span><button>2</button>
+        </div>
       </div>
     </div>
   );
