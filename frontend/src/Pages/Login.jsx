@@ -62,7 +62,7 @@ const Login = () => {
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              style={{ width: '100%', padding: 8, marginTop: 8, borderRadius: 6, border: '1px solid #ccc' }}
+              style={{ width: '100%', padding: 8, marginTop: 8, borderRadius: 6, border: '1px solid #ccc', boxSizing: 'border-box' }}
               autoComplete="current-password"
             />
           </div>
