@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './CustomerSelectModal.css';
 
 const customers = [
@@ -13,7 +12,7 @@ const customers = [
 
 const CustomerSelectModal = ({ visible, onClose, onSelect }) => {
   const [search, setSearch] = useState('');
-  const navigate = useNavigate();
+  const [selectedId, setSelectedId] = useState(null);
   const filtered = customers.filter(c =>
     c.name.includes(search) || c.person.includes(search)
   );
@@ -31,15 +30,14 @@ const CustomerSelectModal = ({ visible, onClose, onSelect }) => {
         />
         <ul className="csm-list-view">
           {filtered.map(c => (
-            <li key={c.id} className="csm-list-item">
+            <li
+              key={c.id}
+              className={`csm-list-item${selectedId === c.id ? ' csm-selected' : ''}`}
+              onClick={() => setSelectedId(c.id)}
+              style={{ cursor: 'pointer' }}
+            >
               <span className="csm-list-name">{c.name}</span>
               <span className="csm-list-person">（担当: {c.person}）</span>
-              <button
-                className="csm-customer-btn primary-button"
-                onClick={() => onSelect(c)}
-              >
-                選択
-              </button>
             </li>
           ))}
           {filtered.length === 0 && (
@@ -48,7 +46,16 @@ const CustomerSelectModal = ({ visible, onClose, onSelect }) => {
         </ul>
         <div className="csm-btn-row">
           <button className="csm-cancel-btn" onClick={onClose}>キャンセル</button>
-          <button className="csm-create-btn primary-button" onClick={() => navigate('/orders/create')}>この顧客で作成</button>
+          <button
+            className="csm-create-btn primary-button"
+            onClick={() => {
+              const selectedCustomer = customers.find(c => c.id === selectedId);
+              if (selectedCustomer) {
+                onSelect(selectedCustomer);
+              }
+            }}
+            disabled={selectedId === null}
+          >この顧客で作成</button>
         </div>
       </div>
     </div>

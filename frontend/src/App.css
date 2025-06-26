@@ -343,7 +343,9 @@ body {
 }
 
 .order-table .mini-button:hover {
-  background: #d14c7b;
+  background: #23306e;
+  color: #fff;
+  transition: background 0.2s, color 0.2s;
 }
 
 /* --- メインボタン --- */
@@ -433,4 +435,103 @@ body {
 }
 .badge.削除済 {
   background: #999;
+}
+
+.selected-row {
+  background: #e6f0fa !important;
+  transition: background 0.2s;
+}
+
+/* --- 受注管理画面の注文日入力欄 --- */
+.order-date-input {
+  border: none;
+  background: #e57d94;
+  border-radius: 22px;
+  padding: 10px 32px;
+  font-size: 1.15rem;
+  color: #fff;
+  width: 200px;
+  text-align: center;
+  letter-spacing: 0.1em;
+  font-weight: bold;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+.order-date-input:focus {
+  outline: 2px solid #fff;
+  background: #d14c7b;
+}
+.order-date-input::placeholder {
+  color: #fff;
+  opacity: 0.7;
+}
+
+/* --- ナビゲーションボタン --- */
+.nav-btn {
+  width: 300px;
+  height: 70px;
+  border-radius: 45px;
+  border: 1px solid #D9D9D9;
+  font-weight: bold;
+  font-size: 20px;
+  margin: 4px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  background: #E57D94;
+  color: #fff;
+}
+.nav-btn.active {
+  background: #fff;
+  color: #E57D94;
+  border: 2px solid #E57D94;
+  box-shadow: 0 0 0 3px #fde7ed;
+  z-index: 2;
+}
+
+.nav-btn:not(.active):hover {
+  background: #d14c7b;
+  color: #fff;
+  border: 1.5px solid #E57D94;
+}
+
+/* --- ページネーション --- */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin: 32px 0 0 0;
+}
+.pagination button {
+  background: #fff;
+  border: none;
+  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #1b2a58;
+  box-shadow: 0 1px 4px #e57d9410;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.pagination button.active {
+  background: #e57d94;
+  color: #fff;
+}
+.pagination button:focus {
+  outline: 2px solid #e57d94;
+}
+.pagination button:hover:not(.active) {
+  background: #f8bfc9;
+  color: #1b2a58;
+}
+.pagination span {
+  font-size: 1.3em;
+  color: #e57d94;
+  margin: 0 8px;
 }

@@ -3,17 +3,11 @@ import '../App.css';
 import Breadcrumbs from '../components/breadcrumbs';
 import NavButton from '../components/button/NavButton';
 import CustomerSelectModal from '../components/CustomerSelectModal';
+import { useOrderContext } from '../contexts/OrderContext';
+import { useNavigate } from 'react-router-dom';
 
 const OrderListPage = () => {
-  const initialData = [
-    { id: 1, name: 'フラワーショップブルーム', date: '2025/6/7',  status: '未納品' },
-    { id: 2, name: 'ブックカフェ ライブラリー', date: '2025/5/11', status: '納品済' },
-    { id: 3, name: '森本友香',               date: '2025/4/30', status: '納品済' },
-    { id: 4, name: 'コーヒーラウンジ レイユ', date: '2025/1/7',  status: '納品済' },
-    { id: 5, name: '木原パオロ隼人',         date: '2024/12/7', status: 'キャンセル済' },
-    { id: 6, name: 'キューズモール森ノ宮',   date: '2024/8/7',  status: '削除済' }
-  ];
-  const [ordersData, setOrdersData] = useState(initialData);
+  const { orders, removeOrders } = useOrderContext();
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [nameFilter, setNameFilter] = useState('');
   const [dateFrom, setDateFrom] = useState('');
@@ -27,6 +21,7 @@ const OrderListPage = () => {
   const [sortOrder, setSortOrder] = useState('desc');
   const [showModal, setShowModal] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const navigate = useNavigate();
 
   const toggleSelectAll = () => {
     if (selectedIds.size === filteredData.length) setSelectedIds(new Set());
@@ -38,14 +33,19 @@ const OrderListPage = () => {
     setSelectedIds(newSet);
   };
   const deleteSelected = () => {
-    setOrdersData(prev => prev.filter(item => !selectedIds.has(item.id)));
+    if (selectedIds.size === 0) {
+      window.alert('削除する項目を選択してください。');
+      return;
+    }
+    if (!window.confirm('選択した注文を削除しますか？')) return;
+    removeOrders(Array.from(selectedIds));
     setSelectedIds(new Set());
   };
   const toggleStatus = status => {
     setStatusFilters(prev => ({ ...prev, [status]: !prev[status] }));
   };
 
-  const filteredData = ordersData
+  const filteredData = orders
     .filter(item => {
       if (nameFilter && !item.name.includes(nameFilter)) return false;
       if (dateFrom && item.date < dateFrom) return false;
@@ -58,6 +58,13 @@ const OrderListPage = () => {
       ? new Date(a.date) - new Date(b.date)
       : new Date(b.date) - new Date(a.date)
     );
+
+  const handleCustomerSelect = (customer) => {
+    setShowModal(false);
+    setSelectedCustomer(customer);
+    // 顧客選択後にOrderCreatePageへ遷移し、顧客情報を渡す
+    navigate('/orders/create', { state: { customer } });
+  };
 
   return (
     <div className="App">
@@ -82,9 +89,9 @@ const OrderListPage = () => {
                 <th><label htmlFor="dateFrom">受注日付</label></th>
                 <td>
                   <div className="date-range">
-                    <input id="dateFrom" type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} />
+                    <input id="dateFrom" type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} className="order-date-input" />
                     <span style={{fontWeight:'bold', color:'#2d2d4b', fontSize:'1.2em'}}>～</span>
-                    <input id="dateTo" type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} />
+                    <input id="dateTo" type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} className="order-date-input" />
                   </div>
                 </td>
               </tr>
@@ -127,29 +134,52 @@ const OrderListPage = () => {
         <CustomerSelectModal
           visible={showModal}
           onClose={() => setShowModal(false)}
-          onSelect={setSelectedCustomer}
+          onSelect={handleCustomerSelect}
         />
 
-        <table className="order-table">
-          <thead>
-            <tr>
-              <th><input type="checkbox" checked={filteredData.length>0 && selectedIds.size===filteredData.length} onChange={toggleSelectAll} /></th>
-              <th>顧客名</th><th>受注日</th><th>注文状態</th><th>明細</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData.map(item=> (
-              <tr key={item.id}>
-                <td><input type="checkbox" checked={selectedIds.has(item.id)} onChange={()=>toggleSelectId(item.id)} /></td>
-                <td>{item.name}</td><td>{item.date}</td>
-                <td><span className={`badge ${item.status}`}>{item.status}</span></td>
-                <td><button className="mini-button">出力</button><button className="mini-button">編集</button></td>
+        {/* 受注テーブル */}
+        <div style={{ background: '#fff', borderRadius: 14, boxShadow: '0 2px 8px #e57d9410', maxWidth: 900, margin: '32px auto 0', overflow: 'hidden' }}>
+          <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0 }}>
+            <thead style={{ background: '#F3F3F6' }}>
+              <tr>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 60 }}><input type="checkbox" checked={filteredData.length>0 && selectedIds.size===filteredData.length} onChange={toggleSelectAll} /></th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center' }}>顧客名</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 120 }}>受注日</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 120 }}>注文状態</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 120 }}>明細</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredData.map(item=> (
+                <tr key={item.id} className={selectedIds.has(item.id) ? 'selected-row' : ''} style={{ borderBottom: '1px solid #f3c1ce' }}>
+                  <td style={{ textAlign: 'center', padding: '10px 8px' }}><input type="checkbox" checked={selectedIds.has(item.id)} onChange={()=>toggleSelectId(item.id)} /></td>
+                  <td style={{ textAlign: 'left', fontWeight: 600, color: '#2d2d4b', fontSize: 15, padding: '10px 8px' }}>{item.name}</td>
+                  <td style={{ textAlign: 'center', color: '#2d2d4b', fontSize: 15, padding: '10px 8px' }}>{item.date}</td>
+                  <td style={{ textAlign: 'center', padding: '10px 8px' }}><span className={`badge ${item.status}`}>{item.status}</span></td>
+                  <td style={{ textAlign: 'center', padding: '10px 8px' }}>
+                    <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+                      <button
+                        style={{ background: '#7ec6ee', color: '#fff', borderRadius: '16px', border: 'none', padding: '4px 12px', minWidth: 36, fontWeight: 'bold', fontSize: 13, cursor: 'pointer', transition: 'background 0.2s' }}
+                        onMouseOver={e => e.currentTarget.style.background = '#5fa6c9'}
+                        onMouseOut={e => e.currentTarget.style.background = '#7ec6ee'}
+                      >出力</button>
+                      <button
+                        style={{ background: '#e57d94', color: '#fff', borderRadius: '16px', border: 'none', padding: '4px 12px', minWidth: 36, fontWeight: 'bold', fontSize: 13, cursor: 'pointer', transition: 'background 0.2s' }}
+                        onMouseOver={e => e.currentTarget.style.background = '#c95d7a'}
+                        onMouseOut={e => e.currentTarget.style.background = '#e57d94'}
+                        onClick={() => navigate('/orders/edit', { state: { order: item } })}
+                      >編集</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-        <div className="pagination"><button>1</button><span>/</span><button>2</button></div>
+        <div className="pagination">
+          <button className="active">1</button><span>/</span><button>2</button>
+        </div>
       </div>
     </div>
   );

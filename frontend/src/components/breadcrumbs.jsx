@@ -18,6 +18,13 @@ const Breadcrumbs = () => {
     customers: '顧客情報',
   };
 
+  // --- 追加: 特定パスの特別表示名 ---
+  const specialPathMap = {
+    'deliveries/create': '納品書作成',
+    'deliveries/edit': '納品書編集',
+  };
+  const joinedPath = paths.join('/');
+
   // 最初のページがloginなら「ログイン」だけ表示
   if (location.pathname === '/login' || location.pathname === '/') {
     return (
@@ -54,7 +61,13 @@ const Breadcrumbs = () => {
       if (segment === 'home') return; // 既にホームは追加済み
       accumulatedPath += '/' + segment;
       const isLast = index === paths.length - 1;
-      const label = displayNameMap[segment] || (segment.match(/^[0-9]+$/) ? '詳細' : segment);
+      // --- 追加: 特別なパスの場合は特別表示名を使う ---
+      let label;
+      if (isLast && specialPathMap[joinedPath]) {
+        label = specialPathMap[joinedPath];
+      } else {
+        label = displayNameMap[segment] || (segment.match(/^[0-9]+$/) ? '詳細' : segment);
+      }
       breadcrumbItems.push(
         <span key={accumulatedPath} className="flex items-center gap-1">
           {isLast ? (
