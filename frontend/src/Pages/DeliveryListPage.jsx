@@ -1,243 +1,182 @@
-// 納品管理画面のコンポーネント
-import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Button from '../components/Button';
-import SearchInput from '../components/SearchInput';
-import Checkbox from '../components/Checkbox';
-import DateInput from '../components/DateInput';
-import OrderTable from '../components/OrderTable';
-import Pagination from '../components/Pagination';
-import SearchPanel from '../components/SearchPanel';
-// import rawData from '../components/info_order.json';
-// 仮データ（info_order.jsonが無い場合のダミーデータ）
-const rawData = [
-  {
-    delivery_name: '株式会社ブックウェイ',
-    order_date: '2025-05-15',
-    remarks: '次回入荷は未定'
-  },
-  {
-    delivery_name: 'ひまわり書房',
-    order_date: '2025-05-18',
-    remarks: ''
-  },
-  {
-    delivery_name: 'ページワン',
-    order_date: '2025-05-20',
-    remarks: '2025年度版'
-  }
-];
-import HeaderNav from '../components/HeaderNav';
+import React, { useState } from 'react';
+import '../App.css';
+import Breadcrumbs from '../components/breadcrumbs';
 import NavButton from '../components/button/NavButton';
-
-// JSONデータを表示用に変換する（idやorderNumberを追加）
-const transformData = (data) => {
-  return data.map((item, index) => ({
-    id: index + 1,
-    orderNumber: `D-${String(index + 1).padStart(3, '0')}`,
-    customer: item.delivery_name,
-    date: item.order_date,
-    status: index % 2 === 0 ? '済' : '未', // 偶数番目を"済"、奇数番目を"未"にする仮実装
-    notes: item.remarks || '',
-  }));
-};
+import CustomerSelectModal from '../components/CustomerSelectModal';
+import { useNavigate } from 'react-router-dom';
+import { useDeliveryContext } from '../contexts/DeliveryContext';
 
 const DeliveryListPage = () => {
+  const { deliveries, removeDeliveries } = useDeliveryContext();
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [nameFilter, setNameFilter] = useState('');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+  const [statusFilters, setStatusFilters] = useState({
+    '未配達': false,
+    '配達済': false,
+    'キャンセル済': false,
+    '削除済': false,
+  });
+  const [sortOrder, setSortOrder] = useState('desc');
+  const [showModal, setShowModal] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const navigate = useNavigate();
-  const ordersPerPage = 50;
-  const [orders] = useState(transformData(rawData));
-  const [searchText, setSearchText] = useState('');
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
-  const [hasNotes, setHasNotes] = useState(false);
-  const [includeDeleted, setIncludeDeleted] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [filteredOrders, setFilteredOrders] = useState(orders);
-  const [checkedItems, setCheckedItems] = useState([]);
 
-  // 検索ボタンを押した時のフィルター処理
-  const handleSearch = () => {
-    const filtered = orders.filter((order) => {
-      const matchesText =
-        searchText === '' ||
-        order.customer.includes(searchText) ||
-        order.orderNumber.includes(searchText) ||
-        order.notes.includes(searchText);
-      const matchesFrom = fromDate === '' || order.date >= fromDate;
-      const matchesTo = toDate === '' || order.date <= toDate;
-      const matchesNotes = !hasNotes || order.notes !== '';
-      const matchesDeleted = includeDeleted || !order.deleted;
-      return (
-        matchesText &&
-        matchesFrom &&
-        matchesTo &&
-        matchesNotes &&
-        matchesDeleted
-      );
-    });
-    setFilteredOrders(filtered);
-    setCurrentPage(1);
+  const toggleSelectAll = () => {
+    if (selectedIds.size === filteredData.length) setSelectedIds(new Set());
+    else setSelectedIds(new Set(filteredData.map(item => item.id)));
+  };
+  const toggleSelectId = id => {
+    const newSet = new Set(selectedIds);
+    newSet.has(id) ? newSet.delete(id) : newSet.add(id);
+    setSelectedIds(newSet);
+  };
+  const deleteSelected = () => {
+    if (!selectedIds.size) return;
+    if (window.confirm('選択した納品書を削除しますか？')) {
+      removeDeliveries(Array.from(selectedIds));
+      setSelectedIds(new Set());
+    }
+  };
+  const toggleStatus = status => {
+    setStatusFilters(prev => ({ ...prev, [status]: !prev[status] }));
   };
 
-  // 検索条件クリア処理
-  const handleClearConditions = () => {
-    setSearchText('');
-    setFromDate('');
-    setToDate('');
-    setHasNotes(false);
-    setIncludeDeleted(false);
-    setFilteredOrders(orders);
-    setCurrentPage(1);
-  };
-
-  // ページネーション：現在表示する50件を切り出す
-  const currentOrders = useMemo(() => {
-    const start = (currentPage - 1) * ordersPerPage;
-    const end = start + ordersPerPage;
-    return filteredOrders.slice(start, end);
-  }, [filteredOrders, currentPage]);
-
-  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
-
-  // 個別削除処理
-  const handleDelete = (id) => {
-    setFilteredOrders(prev => prev.filter(order => order.id !== id));
-  };
-
-  // 編集ページへ遷移
-  const handleEdit = (id) => {
-    navigate(`/deliveries/edit/${id}`);
-  };
-
-  // チェックボックス：1件の選択
-  const handleCheckItem = (id) => {
-    setCheckedItems((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+  const filteredData = deliveries
+    .filter(item => {
+      if (nameFilter && !item.name.includes(nameFilter)) return false;
+      if (dateFrom && item.date < dateFrom) return false;
+      if (dateTo && item.date > dateTo) return false;
+      const active = Object.entries(statusFilters).filter(([,v]) => v).map(([k]) => k);
+      if (active.length && !active.includes(item.status)) return false;
+      return true;
+    })
+    .sort((a, b) => sortOrder === 'asc'
+      ? new Date(a.date) - new Date(b.date)
+      : new Date(b.date) - new Date(a.date)
     );
-  };
-
-  // チェックボックス：全選択
-  const handleCheckAll = (e) => {
-    if (e.target.checked) {
-      setCheckedItems(currentOrders.map((o) => o.id));
-    } else {
-      setCheckedItems([]);
-    }
-  };
-
-  // チェックされた行を一括削除
-  const handleBulkDelete = () => {
-    if (checkedItems.length === 0) return alert('削除対象が選択されていません');
-    if (window.confirm(`${checkedItems.length} 件を削除しますか？`)) {
-      const remaining = filteredOrders.filter((o) => !checkedItems.includes(o.id));
-      setFilteredOrders(remaining);
-      setCheckedItems([]);
-    }
-  };
 
   return (
-    <div style={{ background: '#F9E6ED', minHeight: '100vh', width: '100%', paddingTop: 40, paddingBottom: 40 }}>
-      {/* ナビゲーションボタン（受注・納品・統計） */}
-      <div style={{ display: 'flex', gap: 24, marginBottom: 32, justifyContent: 'center' }}>
-        <NavButton to="/orders">受注管理</NavButton>
-        <NavButton to="/deliveries">納品管理</NavButton>
-        <NavButton to="/stats">統計情報管理</NavButton>
-      </div>
+    <div className="App">
+      <nav className="navbar"><div className="navbar-brand">Midorin</div></nav>
+      <nav className="breadcrumb"><Breadcrumbs /></nav>
 
-      <h1 className="text-2xl font-bold mb-6" style={{ textAlign: 'center', marginBottom: 32 }}>納品管理画面</h1>
+      <div className="main-content column-layout">
+        <div className="tab-buttons">
+          <NavButton to="/orders">受注管理</NavButton>
+          <NavButton to="/deliveries">納品管理</NavButton>
+          <NavButton to="/stats">統計情報管理</NavButton>
+        </div>
 
-      {/* 検索条件エリア */}
-      <SearchPanel style={{ margin: '0 auto 40px auto', boxShadow: '0 2px 8px #0001' }}>
-        <h2 style={{ fontSize: 20, fontWeight: 700, color: '#374151', marginBottom: 24 }}>検索条件を指定してください</h2>
-        {/* 顧客名 */}
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-          <label style={{
-            width: 60,
-            height: 24,
-            color: '#192550',
-            fontFamily: 'Abhaya Libre ExtraBold',
-            fontSize: 20,
-            fontWeight: 800,
-            lineHeight: 'normal',
-            marginRight: 20,
-            display: 'flex',
-            alignItems: 'center',
-          }}>顧客名</label>
-          <div style={{
-            width: 850,
-            height: 40,
-            background: '#EBE8E8',
-            borderRadius: 10,
-            display: 'flex',
-            alignItems: 'center',
-            padding: '0 16px',
-          }}>
-            <SearchInput
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              placeholder="顧客名を入力"
-              style={{
-                width: '100%',
-                height: '100%',
-                background: 'transparent',
-                border: 'none',
-                outline: 'none',
-                fontSize: 18,
-                color: '#222',
-              }}
-            />
+        <form className="search-form" onSubmit={e => e.preventDefault()}>
+          <table className="search-form-table">
+            <tbody>
+              <tr>
+                <th><label htmlFor="customerName">顧客名</label></th>
+                <td><input id="customerName" type="text" value={nameFilter} onChange={e => setNameFilter(e.target.value)} /></td>
+              </tr>
+              <tr>
+                <th><label htmlFor="dateFrom">受注日付</label></th>
+                <td>
+                  <div className="date-range">
+                    <input id="dateFrom" type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} className="order-date-input" />
+                    <span style={{fontWeight:'bold', color:'#2d2d4b', fontSize:'1.2em'}}>～</span>
+                    <input id="dateTo" type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} className="order-date-input" />
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th>注文状態</th>
+                <td>
+                  <div className="status-filters">
+                    {Object.keys(statusFilters).map(status => (
+                      <label key={status}><input type="checkbox" checked={statusFilters[status]} onChange={() => toggleStatus(status)} /> {status}</label>
+                    ))}
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="search-form-bottom">
+            <button className="search-button" type="submit">この条件で検索する</button>
+          </div>
+        </form>
+
+        <div className="action-buttons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%', maxWidth: 800, margin: '40px auto 0 auto' }}>
+          {/* 左側：削除ボタン */}
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
+            <button className="danger" style={{ borderRadius: '24px', fontWeight: 'bold', fontSize: '1.1rem', padding: '14px 36px', background: '#e57d94', color: '#fff', border: 'none' }} onClick={deleteSelected}>
+              選んだ項目を削除
+            </button>
+          </div>
+          {/* 右側：納品書作成＋ソート */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
+            <button className="primary-button" style={{ borderRadius: '24px', fontWeight: 'bold', fontSize: '1.1rem', padding: '14px 36px', background: '#1b2a58', color: '#fff', border: 'none' }} onClick={() => setShowModal(true)}>
+              納品書作成
+            </button>
+            <div className="sort-buttons" style={{ marginTop: 10, display: 'flex', gap: 8 }}>
+              <button className="sort-button ascending" style={{ background: '#e57d94', color: '#fff', borderRadius: '16px', border: 'none', padding: '6px 18px', fontWeight: 'bold' }} onClick={() => setSortOrder('asc')}>昇順</button>
+              <button className="sort-button descending" style={{ background: '#7ec6ee', color: '#fff', borderRadius: '16px', border: 'none', padding: '6px 18px', fontWeight: 'bold' }} onClick={() => setSortOrder('desc')}>降順</button>
+            </div>
           </div>
         </div>
-        {/* 受注日付 */}
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-          <label style={{ width: 100, fontWeight: 500, color: '#222' }}>受注日付</label>
-          <DateInput value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
-          <span style={{ margin: '0 12px' }}>～</span>
-          <DateInput value={toDate} onChange={(e) => setToDate(e.target.value)} />
-        </div>
-        {/* チェック条件 */}
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-          <label style={{ width: 100, fontWeight: 500, color: '#222' }}>注文状態</label>
-          <div style={{ display: 'flex', gap: 32 }}>
-            <Checkbox label="備考あり" checked={hasNotes} onChange={(e) => setHasNotes(e.target.checked)} name="hasNotes" />
-            <Checkbox label="削除データを含む" checked={includeDeleted} onChange={(e) => setIncludeDeleted(e.target.checked)} name="includeDeleted" />
-          </div>
-        </div>
-        {/* ボタン */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginTop: 12 }}>
-          <Button onClick={handleSearch} className="bg-pink-500 hover:bg-pink-600" style={{ minWidth: 200, fontWeight: 700, fontSize: 16, borderRadius: 24, background: '#192040' }}>この条件で検索する</Button>
-          <Button onClick={handleClearConditions} className="bg-gray-400" style={{ minWidth: 200, fontWeight: 700, fontSize: 16, borderRadius: 24 }}>検索条件をクリア</Button>
-        </div>
-      </SearchPanel>
 
-      {/* 操作ボタン：一括削除と納品書作成 */}
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex gap-2">
-          <Button className="bg-red-500" onClick={handleBulkDelete}>選択項目を削除</Button>
+        {/* 顧客選択モーダル */}
+        <CustomerSelectModal
+          visible={showModal}
+          onClose={() => setShowModal(false)}
+          onSelect={customer => {
+            setSelectedCustomer(customer);
+            setShowModal(false);
+            navigate('/deliveries/create', { state: { customer } });
+          }}
+        />
+
+        {/* 納品テーブル */}
+        <div style={{ background: '#fff', borderRadius: 14, boxShadow: '0 2px 8px #e57d9410', maxWidth: 900, margin: '32px auto 0', overflow: 'hidden' }}>
+          <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0 }}>
+            <thead style={{ background: '#F3F3F6' }}>
+              <tr>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 60 }}><input type="checkbox" checked={filteredData.length>0 && selectedIds.size===filteredData.length} onChange={toggleSelectAll} /></th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center' }}>顧客名</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 120 }}>納品日</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 120 }}>配達状況</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 120 }}>明細</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.map(item=> (
+                <tr key={item.id} className={selectedIds.has(item.id) ? 'selected-row' : ''} style={{ borderBottom: '1px solid #f3c1ce' }}>
+                  <td style={{ textAlign: 'center', padding: '10px 8px' }}><input type="checkbox" checked={selectedIds.has(item.id)} onChange={()=>toggleSelectId(item.id)} /></td>
+                  <td style={{ textAlign: 'left', fontWeight: 600, color: '#2d2d4b', fontSize: 15, padding: '10px 8px' }}>{item.name}</td>
+                  <td style={{ textAlign: 'center', color: '#2d2d4b', fontSize: 15, padding: '10px 8px' }}>{item.date}</td>
+                  <td style={{ textAlign: 'center', padding: '10px 8px' }}><span className={`badge ${item.status}`}>{item.status === '未納品' ? '未配達' : item.status === '納品済' ? '配達済' : item.status}</span></td>
+                  <td style={{ textAlign: 'center', padding: '10px 8px' }}>
+                    <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+                      <button
+                        style={{ background: '#7ec6ee', color: '#fff', borderRadius: '16px', border: 'none', padding: '4px 12px', minWidth: 36, fontWeight: 'bold', fontSize: 13, cursor: 'pointer', transition: 'background 0.2s' }}
+                        onMouseOver={e => e.currentTarget.style.background = '#5fa6c9'}
+                        onMouseOut={e => e.currentTarget.style.background = '#7ec6ee'}
+                      >出力</button>
+                      <button
+                        style={{ background: '#e57d94', color: '#fff', borderRadius: '16px', border: 'none', padding: '4px 12px', minWidth: 36, fontWeight: 'bold', fontSize: 13, cursor: 'pointer', transition: 'background 0.2s' }}
+                        onMouseOver={e => e.currentTarget.style.background = '#c95d7a'}
+                        onMouseOut={e => e.currentTarget.style.background = '#e57d94'}
+                        onClick={() => navigate('/deliveries/edit', { state: { delivery: item, customer: { name: item.name }, date: item.date } })}
+                      >編集</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-        <div className="flex gap-2">
-          <Button onClick={() => navigate('/deliveries/create')} className="bg-pink-500 hover:bg-pink-600">納品書作成</Button>
+
+        <div className="pagination">
+          <button className="active">1</button><span>/</span><button>2</button>
         </div>
       </div>
-
-      {/* テーブル表示エリア */}
-      <OrderTable
-        orders={currentOrders}
-        onDelete={handleDelete}
-        onEdit={handleEdit}
-        onCheck={{
-          all: handleCheckAll,
-          item: handleCheckItem,
-        }}
-        checkedItems={checkedItems}
-      />
-
-      {/* ページネーション */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
     </div>
   );
 };

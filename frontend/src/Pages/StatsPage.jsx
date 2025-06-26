@@ -1,313 +1,90 @@
 import React, { useState } from 'react';
-
-import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
-import Button from '../components/Button';
-
-import Button from '../components/Button';
- 
-const initialCustomerData = [
-
-  {
-
-    id: 1,
-
-    name: 'ギャラリーカフェ ループ',
-
-    revenue: '120,515円',
-
-    leadTime: '13.5日',
-
-  },
-
-  {
-
-    id: 2,
-
-    name: '情報専門学校',
-
-    revenue: '90,500円',
-
-    leadTime: '11.5日',
-
-  },
-
-  {
-
-    id: 3,
-
-    name: '森ノ宮図書館',
-
-    revenue: '10,0100円',
-
-    leadTime: '14日',
-
-  },
-
-  {
-
-    id: 4,
-
-    name: '緑橋病院　担当者野木',
-
-    revenue: '50,453円',
-
-    leadTime: '7日',
-
-  },
-
-  {
-
-    id: 5,
-
-    name: '看護専門学校',
-
-    revenue: '15,500円',
-
-    leadTime: '5日',
-
-  },
-
-];
- 
-const parseLeadTime = (leadTime) => parseFloat(leadTime.replace('日', ''));
-
-// --- Breadcrumbsコンポーネントを外に出す ---
-const Breadcrumbs = () => {
-  const location = useLocation();
-  const paths = location.pathname.split('/').filter(Boolean);
-
-  // 表示名マッピング
-  const displayNameMap = {
-    orders: '受注管理',
-    create: '注文書作成',
-    edit: '注文書編集',
-    deliveries: '納品管理',
-    stats: '統計情報管理',
-    customers: '顧客情報',
-  };
-
-  const breadcrumbItems = paths.map((segment, index) => {
-    const isLast = index === paths.length - 1;
-    const pathSlice = paths.slice(0, index + 1);
-    const routePath = '/' + pathSlice.join('/');
-
-    // ID部分は除外（edit/:id など）
-    const label = displayNameMap[segment] || (segment.match(/^\d+$/) ? '詳細' : segment);
-
-    return (
-      <span key={routePath} className="flex items-center gap-1">
-        {!isLast ? (
-          <>
-            <Link to={routePath} className="text-blue-600 hover:underline">{label}</Link>
-            <ChevronRight className="inline w-4 h-4 text-gray-400" />
-          </>
-        ) : (
-          <span className="text-gray-500">{label}</span>
-        )}
-      </span>
-    );
-  });
-
-  return (
-    <nav className="text-sm text-gray-700 flex items-center gap-1 mb-4">
-      <Link to="/" className="text-blue-600 hover:underline">ホーム</Link>
-      {paths.length > 0 && <ChevronRight className="inline w-4 h-4 text-gray-400" />}
-      {breadcrumbItems}
-    </nav>
-  );
-};
-// --- ここまで ---
-
+import '../App.css';
+import Breadcrumbs from '../components/breadcrumbs';
+import NavButton from '../components/button/NavButton';
+import { useDeliveryContext } from '../contexts/DeliveryContext';
 
 const StatsPage = () => {
+  const { deliveries } = useDeliveryContext();
+  const [nameFilter, setNameFilter] = useState('');
 
-  const [keyword, setKeyword] = useState('');
+  // 顧客ごとに集計（売上高・リードタイム例）
+  const customerStats = deliveries
+    .filter(item => !nameFilter || item.name.includes(nameFilter))
+    .reduce((acc, item) => {
+      if (!acc[item.name]) acc[item.name] = { sales: 0, leadTimes: [], details: [] };
+      // 売上高計算（配達済のみ）
+      if (item.status === '納品済' || item.status === '配達済') {
+        const sum = (item.rows || []).reduce((s, r) => s + (Number(r.price) * Number(r.quantity) || 0), 0);
+        acc[item.name].sales += sum;
+        // リードタイム計算（受注日→納品日の日数差）
+        if (item.orderDate && item.date) {
+          const order = new Date(item.orderDate);
+          const delivery = new Date(item.date);
+          const diff = Math.round((delivery - order) / (1000 * 60 * 60 * 24));
+          acc[item.name].leadTimes.push(diff);
+        }
+        acc[item.name].details.push(item);
+      }
+      return acc;
+    }, {});
 
-  const [data, setData] = useState(
+  // テーブル用データ
+  const tableData = Object.entries(customerStats).map(([name, stat]) => ({
+    name,
+    sales: stat.sales,
+    leadTime: stat.leadTimes.length ? (stat.leadTimes.reduce((a, b) => a + b, 0) / stat.leadTimes.length).toFixed(1) + '日' : '-',
+    details: stat.details,
+  }));
 
-    [...initialCustomerData].sort((a, b) => parseLeadTime(b.leadTime) - parseLeadTime(a.leadTime))
-
-  );
-
-  const [selected, setSelected] = useState([]);
-
-  const navigate = useNavigate();
- 
-  // 検索
-
-  const handleSearch = () => {
-
-    setData(
-
-      [...initialCustomerData]
-
-        .filter((item) => item.name.includes(keyword))
-
-        .sort((a, b) => parseLeadTime(b.leadTime) - parseLeadTime(a.leadTime))
-
-    );
-
-    setSelected([]);
-
-  };
- 
-  // 並び替え
-
-  const handleSort = (order) => {
-
-    const sorted = [...data].sort((a, b) =>
-
-      order === 'asc'
-
-        ? parseLeadTime(a.leadTime) - parseLeadTime(b.leadTime)
-
-        : parseLeadTime(b.leadTime) - parseLeadTime(a.leadTime)
-
-    );
-
-    setData(sorted);
-
-  // Excelアップロードボタン（ダミー）
-  };
- 
-
-
-  const handleExcelUpload = () => {
-
-    alert('Excelアップロード（ダミー）');
-
-  };
- 
-  // チェックボックス選択
-
-  const handleSelect = (id) => {
-
-    setSelected((prev) =>
-
-      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
-
-    );
-
-  };
- 
   return (
-
-    <div className="p-6 bg-gray-100 space-y-6">
-      {/* パンくずリスト */}
-      <Breadcrumbs />
-
-      {/* ナビゲーションボタン */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-        <Button onClick={() => navigate('/orders')}>受注管理</Button>
-        <Button onClick={() => navigate('/deliveries')}>納品管理</Button>
-        <Button onClick={() => navigate('/stats')}>統計情報管理</Button>
+    <div className="App">
+      <nav className="navbar"><div className="navbar-brand">Midorin</div></nav>
+      <nav className="breadcrumb"><Breadcrumbs /></nav>
+      <div className="main-content column-layout">
+        <div className="tab-buttons">
+          <NavButton to="/orders">受注管理</NavButton>
+          <NavButton to="/deliveries">納品管理</NavButton>
+          <NavButton to="/stats">統計情報管理</NavButton>
+        </div>
+        <form className="search-form" onSubmit={e => e.preventDefault()} style={{ maxWidth: 500, margin: '32px auto 0' }}>
+          <table className="search-form-table">
+            <tbody>
+              <tr>
+                <th><label htmlFor="customerName">顧客名</label></th>
+                <td><input id="customerName" type="text" value={nameFilter} onChange={e => setNameFilter(e.target.value)} /></td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+        {/* 統計テーブル */}
+        <div style={{ background: '#fff', borderRadius: 20, boxShadow: '0 2px 12px #e57d9420', maxWidth: 660, margin: '32px auto 0', overflow: 'hidden', minWidth: 660 }}>
+          <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0, minWidth: 660 }}>
+            <thead style={{ background: '#F3F3F6' }}>
+              <tr>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center' }}>顧客名</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center' }}>売上高</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center' }}>リードタイム</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center' }}>明細</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tableData.map(row => (
+                <tr key={row.name} style={{ borderBottom: '1px solid #f3c1ce' }}>
+                  <td style={{ textAlign: 'left', fontWeight: 600, color: '#2d2d4b', fontSize: 15, padding: '10px 32px 10px 32px' }}>{row.name}</td>
+                  <td style={{ textAlign: 'right', color: '#2d2d4b', fontSize: 15, padding: '10px 8px' }}>{row.sales.toLocaleString()} 円</td>
+                  <td style={{ textAlign: 'center', color: '#2d2d4b', fontSize: 15, padding: '10px 8px' }}>{row.leadTime}</td>
+                  <td style={{ textAlign: 'center', padding: '10px 8px' }}>
+                    <button style={{ background: '#7ec6ee', color: '#fff', borderRadius: '16px', border: 'none', padding: '4px 12px', fontWeight: 'bold', fontSize: 13, cursor: 'pointer' }}>明細</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-
-
-      {/* ナビゲーションボタン */}
-<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-<Button onClick={() => navigate('/orders')}>受注管理</Button>
-<Button onClick={() => navigate('/deliveries')}>納品管理</Button>
-<Button onClick={() => navigate('/stats')}>統計情報管理</Button>
-</div>
- 
-      {/* 検索条件 */}
-<div className="bg-gray-400 p-4 text-white text-center text-lg font-semibold rounded">
-
-        検索条件を指定して検索してください
-</div>
-<div className="flex items-center bg-gray-200 p-4 space-x-2 rounded">
-<label className="w-24 bg-gray-500 text-white text-center py-2 rounded">顧客名</label>
-<input
-
-          type="text"
-
-          className="flex-1 border border-gray-300 px-4 py-2 rounded"
-
-          placeholder="顧客名を入力"
-
-          value={keyword}
-
-          onChange={(e) => setKeyword(e.target.value)}
-
-        />
-</div>
- 
-      {/* ボタン */}
-<div className="flex space-x-4 px-4">
-<button className="bg-green-600 text-white px-4 py-2 rounded" onClick={handleExcelUpload}>
-
-          Excelアップロード
-</button>
-<button className="bg-pink-500 text-white px-4 py-2 rounded" onClick={handleSearch}>
-
-          この条件で検索する
-</button>
-<button className="bg-orange-400 text-white px-4 py-2 rounded" onClick={() => handleSort('asc')}>
-
-          昇順
-</button>
-<button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => handleSort('desc')}>
-
-          降順
-</button>
-</div>
- 
-      {/* 顧客データテーブル */}
-<div className="bg-gray-300 p-2 font-bold text-center">
-
-        顧客データ【{data.length}件表示】
-</div>
-<table className="min-w-full table-auto border-collapse">
-<thead className="bg-gray-500 text-white">
-<tr>
-<th className="p-2 border">選択</th>
-<th className="p-2 border">納品先</th>
-<th className="p-2 border">売上高</th>
-<th className="p-2 border">リードタイム</th>
-<th className="p-2 border">顧客情報</th>
-</tr>
-</thead>
-<tbody>
-
-          {data.map((customer) => (
-<tr key={customer.id} className="bg-white text-center border-t">
-<td className="p-2 border">
-<input
-
-                  type="checkbox"
-
-                  checked={selected.includes(customer.id)}
-
-                  onChange={() => handleSelect(customer.id)}
-
-                />
-</td>
-<td className="p-2 border">{customer.name}</td>
-<td className="p-2 border">{customer.revenue}</td>
-<td className="p-2 border">{customer.leadTime}</td>
-<td className="p-2 border">
-<button
-
-                  className="bg-gray-300 px-4 py-1 rounded"
-
-                  onClick={() => navigate('/customers')}
->
-
-                  参照
-</button>
-</td>
-</tr>
-
-          ))}
-</tbody>
-</table>
-</div>
-
+    </div>
   );
-
 };
- 
+
 export default StatsPage;
- 

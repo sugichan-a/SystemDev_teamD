@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 
-function NavButton({ to, children, style = {}, ...props }) {
+function NavButton({ to, children, style = {}, className = '', ...props }) {
   const location = useLocation();
   const navigate = useNavigate();
   // 完全一致 or startsWith でアクティブ判定
@@ -27,8 +27,10 @@ function NavButton({ to, children, style = {}, ...props }) {
     baseStyle.color = '#fff';
     baseStyle.border = '1px solid #D9D9D9';
   }
+  // activeクラスを付与
+  const buttonClass = `${className} nav-btn${isActive ? ' active' : ''}`;
   return (
-    <button onClick={() => navigate(to)} style={baseStyle} {...props}>
+    <button onClick={() => navigate(to)} style={baseStyle} className={buttonClass} {...props}>
       {children}
     </button>
   );
