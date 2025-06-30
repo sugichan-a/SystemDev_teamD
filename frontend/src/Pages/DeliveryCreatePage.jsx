@@ -12,6 +12,10 @@ const initialCustomer = {
 
 const initialRows = [
   { id: 1, name: '医療情報技師 医学医療編', quantity: 5, price: 2500, code: '987-486705138' },
+  { id: 2, name: '看護師国家試験対策 2025', quantity: 3, price: 3200, code: '978-476531234' },
+  { id: 3, name: '薬剤師のための実践薬学', quantity: 2, price: 4100, code: '978-489234567' },
+  { id: 4, name: '臨床検査技師テキスト', quantity: 4, price: 2800, code: '978-476531235' },
+  { id: 5, name: '医療安全管理入門', quantity: 1, price: 1800, code: '978-476531236' },
 ];
 
 const getToday = () => {
@@ -22,15 +26,33 @@ const getToday = () => {
 const DeliveryCreatePage = () => {
   const location = useLocation();
   const customerFromState = location.state && location.state.customer;
+  const selectedProducts = location.state && location.state.selectedProducts;
   const [customer] = useState(customerFromState || initialCustomer);
   const [date, setDate] = useState(getToday());
-  const [rows, setRows] = useState(initialRows);
+  const [rows, setRows] = useState(
+    selectedProducts && selectedProducts.length > 0
+      ? selectedProducts.map(p => ({
+          id: p.id,
+          name: p.name,
+          quantity: p.quantity || 1,
+          price: p.price || '',
+          code: p.code || '',
+        }))
+      : initialRows
+  );
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
   const { addDelivery } = useDeliveryContext();
 
   const handleAddRow = () => {
-    setRows([...rows, { id: Date.now(), name: '', quantity: 1, price: '', code: '' }]);
+    // 商品追加ボタンでDeliverySelectPageに戻る
+    navigate('/deliveries/select', {
+      state: {
+        customer,
+        // 既存の選択済み商品IDを渡す（必要ならrowsのid配列など）
+        selectedProductIds: rows.map(r => r.id),
+      },
+    });
   };
   const handleDeleteRow = (id) => {
     setRows(rows.filter(r => r.id !== id));
@@ -139,11 +161,11 @@ const DeliveryCreatePage = () => {
                   <td style={{ textAlign: 'left', fontWeight: 600, color: '#2d2d4b', fontSize: 15 }}>
                     <input type="text" value={row.name} onChange={e => handleChange(row.id, 'name', e.target.value)} style={{ border: 'none', background: 'transparent', width: '100%', fontWeight: 600, color: '#2d2d4b', fontSize: 15 }} />
                   </td>
-                  <td style={{ textAlign: 'center' }}>
-                    <input type="number" min="1" value={row.quantity} onChange={e => handleChange(row.id, 'quantity', e.target.value)} style={{ border: 'none', background: 'transparent', width: 40, textAlign: 'center', fontSize: 15 }} />
+                  <td style={{ textAlign: 'center', fontWeight: 500 }}>
+                    {row.quantity}
                   </td>
-                  <td style={{ textAlign: 'center' }}>
-                    <input type="number" min="0" value={row.price} onChange={e => handleChange(row.id, 'price', e.target.value)} style={{ border: 'none', background: 'transparent', width: 70, textAlign: 'right', fontSize: 15 }} />
+                  <td style={{ textAlign: 'center', fontWeight: 500 }}>
+                    {row.price}
                   </td>
                   <td style={{ textAlign: 'center', color: '#2d2d4b', fontSize: 15 }}>
                     <input type="text" value={row.code} onChange={e => handleChange(row.id, 'code', e.target.value)} style={{ border: 'none', background: 'transparent', width: 110, fontSize: 15 }} />

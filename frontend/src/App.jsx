@@ -10,6 +10,7 @@ import OrderEditPage from './Pages/OrderEditPage';
 import DeliveryListPage from './Pages/DeliveryListPage';
 import DeliveryCreatePage from './Pages/DeliveryCreatePage';
 import DeliveryEditPage from './Pages/DeliveryEditPage';
+import DeliverySelectPage from './Pages/DeliverySelectPage';
 import StatsPage from './Pages/StatsPage';
 import CustomerPage from './Pages/CustomerPage';
 import LoginPage from './Pages/Login';
@@ -33,8 +34,9 @@ const App = () => {
               <Route path="/orders/create" element={<OrderCreatePage />} />
               <Route path="/orders/edit" element={<OrderEditPage />} />
               <Route path="/deliveries" element={<DeliveryListPage />} />
-              <Route path="/deliveries/create" element={<DeliveryCreatePage />} />
-              <Route path="/deliveries/edit" element={<DeliveryEditPage />} />
+              <Route path="/deliveries/select" element={<DeliverySelectPage />} />
+              <Route path="/deliveries/select/create" element={<DeliveryCreatePage />} />
+              <Route path="/deliveries/select/edit" element={<DeliveryEditPage />} />
               <Route path="/stats" element={<StatsPage />} />
               <Route path="/customers" element={<CustomerPage />} />
             </Routes>
