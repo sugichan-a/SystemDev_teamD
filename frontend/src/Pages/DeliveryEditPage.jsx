@@ -12,6 +12,10 @@ const initialCustomer = {
 
 const initialRows = [
   { id: 1, name: '医療情報技師 医学医療編', quantity: 5, price: 2500, code: '987-486705138' },
+  { id: 2, name: '看護師国家試験対策 2025', quantity: 3, price: 3200, code: '978-476531234' },
+  { id: 3, name: '薬剤師のための実践薬学', quantity: 2, price: 4100, code: '978-489234567' },
+  { id: 4, name: '臨床検査技師テキスト', quantity: 4, price: 2800, code: '978-476531235' },
+  { id: 5, name: '医療安全管理入門', quantity: 1, price: 1800, code: '978-476531236' },
 ];
 
 const getToday = () => {
@@ -32,7 +36,10 @@ const DeliveryEditPage = () => {
 
   useEffect(() => {
     if (deliveryFromState) {
-      setCustomer({ name: deliveryFromState.name });
+      setCustomer({
+        name: deliveryFromState.name,
+        person: deliveryFromState.person || initialCustomer.person,
+      });
       if (deliveryFromState.date) {
         const parts = deliveryFromState.date.split('/');
         if (parts.length === 3) {
@@ -51,7 +58,14 @@ const DeliveryEditPage = () => {
   }, [deliveryFromState]);
 
   const handleAddRow = () => {
-    setRows([...rows, { id: Date.now(), name: '', quantity: 1, price: '', code: '' }]);
+    // 商品追加ボタンでDeliverySelectPageに遷移
+    navigate('/deliveries/select', {
+      state: {
+        customer,
+        selectedProductIds: rows.map(r => r.id),
+        from: 'edit', // 戻り先判定用
+      },
+    });
   };
   const handleDeleteRow = (id) => {
     setRows(rows.filter(r => r.id !== id));
@@ -136,7 +150,9 @@ const DeliveryEditPage = () => {
   return (
     <div className="App" style={{ background: '#F9DDE2', minHeight: '100vh' }}>
       <nav className="navbar"><div className="navbar-brand">Midorin</div></nav>
-      <nav className="breadcrumb"><Breadcrumbs /></nav>
+      <nav className="breadcrumb">
+        <Breadcrumbs currentLabel="商品選択" />
+      </nav>
       <div className="main-content column-layout">
         <div className="tab-buttons">
           <NavButton to="/orders">受注管理</NavButton>
