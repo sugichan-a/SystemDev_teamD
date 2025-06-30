@@ -96,10 +96,12 @@ const OrderCreatePage = () => {
               <div style={{ color: '#888', fontWeight: 500, fontSize: 15 }}>顧客名</div>
               <div style={{ fontWeight: 'bold', fontSize: 16, textAlign: 'center', margin: '6px 0 0 0' }}>{customer.name}</div>
             </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ color: '#888', fontWeight: 500, fontSize: 15 }}>担当者名</div>
-              <div style={{ fontWeight: 'bold', fontSize: 16, color: '#2d2d4b', textAlign: 'center', margin: '6px 0 0 0' }}>{customer.person}</div>
-            </div>
+            {customer.person && customer.person !== customer.name && (
+              <div style={{ flex: 1 }}>
+                <div style={{ color: '#888', fontWeight: 500, fontSize: 15 }}>担当者名</div>
+                <div style={{ fontWeight: 'bold', fontSize: 16, color: '#2d2d4b', textAlign: 'center', margin: '6px 0 0 0' }}>{customer.person}</div>
+              </div>
+            )}
             <div style={{ flex: 1 }}>
               <div style={{ color: '#888', fontWeight: 500, fontSize: 15 }}>受注日付</div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 6 }}>
