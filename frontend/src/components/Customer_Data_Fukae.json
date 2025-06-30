@@ -1,0 +1,22 @@
+[
+  {
+    "customer_id": 1,
+    "customer_name": "伊崎佳典",
+    "customer_manager": "",
+    "customer_address": "大阪市東成区深江北3-4-2",
+    "customer_phone": "090-4685-4454",
+    "customer_delivery_conditions": "",
+    "customer_note": "",
+    "customer_registration_date": "2002-05-08"
+  },
+  {
+    "customer_id": 2,
+    "customer_name": "カフェ ブルーナ",
+    "customer_manager": "斐川美津子",
+    "customer_address": "大阪市東成区神路3-1-1",
+    "customer_phone": "06-9339-6632",
+    "customer_delivery_conditions": "",
+    "customer_note": "",
+    "customer_registration_date": "2005-04-01"
+  }
+]
