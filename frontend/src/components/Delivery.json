@@ -1,0 +1,702 @@
+[
+  {
+    "Delivery_id": "D0001",
+    "Order_id": "O0001",
+    "Customer_id": "C0001",
+    "Delivery_date": "2025-04-02",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0002",
+    "Order_id": "O0002",
+    "Customer_id": "C0002",
+    "Delivery_date": "2025-04-19",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0003",
+    "Order_id": "O0003",
+    "Customer_id": "C0003",
+    "Delivery_date": "2025-06-23",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0004",
+    "Order_id": "O0004",
+    "Customer_id": "C0004",
+    "Delivery_date": "2025-04-11",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0005",
+    "Order_id": "O0005",
+    "Customer_id": "C0005",
+    "Delivery_date": "2025-03-28",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0006",
+    "Order_id": "O0006",
+    "Customer_id": "C0006",
+    "Delivery_date": "2025-04-24",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0007",
+    "Order_id": "O0007",
+    "Customer_id": "C0007",
+    "Delivery_date": "2025-05-31",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0008",
+    "Order_id": "O0008",
+    "Customer_id": "C0008",
+    "Delivery_date": "2025-06-26",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0009",
+    "Order_id": "O0009",
+    "Customer_id": "C0009",
+    "Delivery_date": "2025-05-19",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0010",
+    "Order_id": "O0010",
+    "Customer_id": "C0010",
+    "Delivery_date": "2025-06-02",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0011",
+    "Order_id": "O0011",
+    "Customer_id": "C0011",
+    "Delivery_date": "2025-04-25",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0012",
+    "Order_id": "O0012",
+    "Customer_id": "C0012",
+    "Delivery_date": "2025-06-06",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0013",
+    "Order_id": "O0013",
+    "Customer_id": "C0013",
+    "Delivery_date": "2025-05-06",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0014",
+    "Order_id": "O0014",
+    "Customer_id": "C0014",
+    "Delivery_date": "2025-06-18",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0015",
+    "Order_id": "O0015",
+    "Customer_id": "C0015",
+    "Delivery_date": "2025-06-06",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0016",
+    "Order_id": "O0016",
+    "Customer_id": "C0016",
+    "Delivery_date": "2025-06-06",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0017",
+    "Order_id": "O0017",
+    "Customer_id": "C0017",
+    "Delivery_date": "2025-05-27",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0018",
+    "Order_id": "O0018",
+    "Customer_id": "C0018",
+    "Delivery_date": "2025-04-09",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0019",
+    "Order_id": "O0019",
+    "Customer_id": "C0019",
+    "Delivery_date": "2025-04-07",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0020",
+    "Order_id": "O0020",
+    "Customer_id": "C0020",
+    "Delivery_date": "2025-05-10",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0021",
+    "Order_id": "O0021",
+    "Customer_id": "C0021",
+    "Delivery_date": "2025-06-04",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0022",
+    "Order_id": "O0022",
+    "Customer_id": "C0022",
+    "Delivery_date": "2025-04-11",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0023",
+    "Order_id": "O0023",
+    "Customer_id": "C0023",
+    "Delivery_date": "2025-04-15",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0024",
+    "Order_id": "O0024",
+    "Customer_id": "C0024",
+    "Delivery_date": "2025-04-08",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0025",
+    "Order_id": "O0025",
+    "Customer_id": "C0025",
+    "Delivery_date": "2025-04-09",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0026",
+    "Order_id": "O0026",
+    "Customer_id": "C0026",
+    "Delivery_date": "2025-05-28",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0027",
+    "Order_id": "O0027",
+    "Customer_id": "C0027",
+    "Delivery_date": "2025-04-30",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0028",
+    "Order_id": "O0028",
+    "Customer_id": "C0028",
+    "Delivery_date": "2025-06-08",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0029",
+    "Order_id": "O0029",
+    "Customer_id": "C0029",
+    "Delivery_date": "2025-05-05",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0030",
+    "Order_id": "O0030",
+    "Customer_id": "C0030",
+    "Delivery_date": "2025-06-07",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0031",
+    "Order_id": "O0031",
+    "Customer_id": "C0031",
+    "Delivery_date": "2025-04-23",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0032",
+    "Order_id": "O0032",
+    "Customer_id": "C0032",
+    "Delivery_date": "2025-04-17",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0033",
+    "Order_id": "O0033",
+    "Customer_id": "C0033",
+    "Delivery_date": "2025-05-19",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0034",
+    "Order_id": "O0034",
+    "Customer_id": "C0034",
+    "Delivery_date": "2025-04-26",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0035",
+    "Order_id": "O0035",
+    "Customer_id": "C0035",
+    "Delivery_date": "2025-05-03",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0036",
+    "Order_id": "O0036",
+    "Customer_id": "C0036",
+    "Delivery_date": "2025-06-21",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0037",
+    "Order_id": "O0037",
+    "Customer_id": "C0037",
+    "Delivery_date": "2025-04-21",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0038",
+    "Order_id": "O0038",
+    "Customer_id": "C0038",
+    "Delivery_date": "2025-04-25",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0039",
+    "Order_id": "O0039",
+    "Customer_id": "C0039",
+    "Delivery_date": "2025-05-11",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0040",
+    "Order_id": "O0040",
+    "Customer_id": "C0040",
+    "Delivery_date": "2025-04-06",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0041",
+    "Order_id": "O0041",
+    "Customer_id": "C0041",
+    "Delivery_date": "2025-04-15",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0042",
+    "Order_id": "O0042",
+    "Customer_id": "C0042",
+    "Delivery_date": "2025-05-03",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0043",
+    "Order_id": "O0043",
+    "Customer_id": "C0043",
+    "Delivery_date": "2025-04-10",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0044",
+    "Order_id": "O0044",
+    "Customer_id": "C0044",
+    "Delivery_date": "2025-04-04",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0045",
+    "Order_id": "O0045",
+    "Customer_id": "C0045",
+    "Delivery_date": "2025-06-03",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0046",
+    "Order_id": "O0046",
+    "Customer_id": "C0046",
+    "Delivery_date": "2025-06-15",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0047",
+    "Order_id": "O0047",
+    "Customer_id": "C0047",
+    "Delivery_date": "2025-05-15",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0048",
+    "Order_id": "O0048",
+    "Customer_id": "C0048",
+    "Delivery_date": "2025-06-18",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0049",
+    "Order_id": "O0049",
+    "Customer_id": "C0049",
+    "Delivery_date": "2025-05-17",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0050",
+    "Order_id": "O0050",
+    "Customer_id": "C0050",
+    "Delivery_date": "2025-04-05",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0051",
+    "Order_id": "O0051",
+    "Customer_id": "C0051",
+    "Delivery_date": "2025-05-31",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0052",
+    "Order_id": "O0052",
+    "Customer_id": "C0052",
+    "Delivery_date": "2025-05-11",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0053",
+    "Order_id": "O0053",
+    "Customer_id": "C0053",
+    "Delivery_date": "2025-05-04",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0054",
+    "Order_id": "O0054",
+    "Customer_id": "C0054",
+    "Delivery_date": "2025-04-22",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0055",
+    "Order_id": "O0055",
+    "Customer_id": "C0055",
+    "Delivery_date": "2025-05-15",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0056",
+    "Order_id": "O0056",
+    "Customer_id": "C0056",
+    "Delivery_date": "2025-04-25",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0057",
+    "Order_id": "O0057",
+    "Customer_id": "C0057",
+    "Delivery_date": "2025-04-07",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0058",
+    "Order_id": "O0058",
+    "Customer_id": "C0058",
+    "Delivery_date": "2025-04-15",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0059",
+    "Order_id": "O0059",
+    "Customer_id": "C0059",
+    "Delivery_date": "2025-06-24",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0060",
+    "Order_id": "O0060",
+    "Customer_id": "C0060",
+    "Delivery_date": "2025-05-23",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0061",
+    "Order_id": "O0061",
+    "Customer_id": "C0061",
+    "Delivery_date": "2025-04-02",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0062",
+    "Order_id": "O0062",
+    "Customer_id": "C0062",
+    "Delivery_date": "2025-06-10",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0063",
+    "Order_id": "O0063",
+    "Customer_id": "C0063",
+    "Delivery_date": "2025-05-19",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0064",
+    "Order_id": "O0064",
+    "Customer_id": "C0064",
+    "Delivery_date": "2025-04-04",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0065",
+    "Order_id": "O0065",
+    "Customer_id": "C0065",
+    "Delivery_date": "2025-05-20",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0066",
+    "Order_id": "O0066",
+    "Customer_id": "C0066",
+    "Delivery_date": "2025-05-28",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0067",
+    "Order_id": "O0067",
+    "Customer_id": "C0067",
+    "Delivery_date": "2025-05-19",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0068",
+    "Order_id": "O0068",
+    "Customer_id": "C0068",
+    "Delivery_date": "2025-05-14",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0069",
+    "Order_id": "O0069",
+    "Customer_id": "C0069",
+    "Delivery_date": "2025-06-11",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0070",
+    "Order_id": "O0070",
+    "Customer_id": "C0070",
+    "Delivery_date": "2025-04-19",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0071",
+    "Order_id": "O0071",
+    "Customer_id": "C0071",
+    "Delivery_date": "2025-04-09",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0072",
+    "Order_id": "O0072",
+    "Customer_id": "C0072",
+    "Delivery_date": "2025-05-08",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0073",
+    "Order_id": "O0073",
+    "Customer_id": "C0073",
+    "Delivery_date": "2025-04-16",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0074",
+    "Order_id": "O0074",
+    "Customer_id": "C0074",
+    "Delivery_date": "2025-04-05",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0075",
+    "Order_id": "O0075",
+    "Customer_id": "C0075",
+    "Delivery_date": "2025-05-26",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0076",
+    "Order_id": "O0076",
+    "Customer_id": "C0076",
+    "Delivery_date": "2025-05-28",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0077",
+    "Order_id": "O0077",
+    "Customer_id": "C0077",
+    "Delivery_date": "2025-04-25",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0078",
+    "Order_id": "O0078",
+    "Customer_id": "C0078",
+    "Delivery_date": "2025-04-01",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0079",
+    "Order_id": "O0079",
+    "Customer_id": "C0079",
+    "Delivery_date": "2025-05-10",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0080",
+    "Order_id": "O0080",
+    "Customer_id": "C0080",
+    "Delivery_date": "2025-05-31",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0081",
+    "Order_id": "O0081",
+    "Customer_id": "C0081",
+    "Delivery_date": "2025-04-02",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0082",
+    "Order_id": "O0082",
+    "Customer_id": "C0082",
+    "Delivery_date": "2025-06-18",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0083",
+    "Order_id": "O0083",
+    "Customer_id": "C0083",
+    "Delivery_date": "2025-04-28",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0084",
+    "Order_id": "O0084",
+    "Customer_id": "C0084",
+    "Delivery_date": "2025-04-29",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0085",
+    "Order_id": "O0085",
+    "Customer_id": "C0085",
+    "Delivery_date": "2025-06-22",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0086",
+    "Order_id": "O0086",
+    "Customer_id": "C0086",
+    "Delivery_date": "2025-04-24",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0087",
+    "Order_id": "O0087",
+    "Customer_id": "C0087",
+    "Delivery_date": "2025-04-26",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0088",
+    "Order_id": "O0088",
+    "Customer_id": "C0088",
+    "Delivery_date": "2025-05-21",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0089",
+    "Order_id": "O0089",
+    "Customer_id": "C0089",
+    "Delivery_date": "2025-06-01",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0090",
+    "Order_id": "O0090",
+    "Customer_id": "C0090",
+    "Delivery_date": "2025-05-03",
+    "Delivery_status": "配達中"
+  },
+  {
+    "Delivery_id": "D0091",
+    "Order_id": "O0091",
+    "Customer_id": "C0091",
+    "Delivery_date": "2025-04-12",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0092",
+    "Order_id": "O0092",
+    "Customer_id": "C0092",
+    "Delivery_date": "2025-06-01",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0093",
+    "Order_id": "O0093",
+    "Customer_id": "C0093",
+    "Delivery_date": "2025-06-02",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0094",
+    "Order_id": "O0094",
+    "Customer_id": "C0094",
+    "Delivery_date": "2025-06-24",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0095",
+    "Order_id": "O0095",
+    "Customer_id": "C0095",
+    "Delivery_date": "2025-04-08",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0096",
+    "Order_id": "O0096",
+    "Customer_id": "C0096",
+    "Delivery_date": "2025-06-10",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0097",
+    "Order_id": "O0097",
+    "Customer_id": "C0097",
+    "Delivery_date": "2025-06-21",
+    "Delivery_status": "未配達"
+  },
+  {
+    "Delivery_id": "D0098",
+    "Order_id": "O0098",
+    "Customer_id": "C0098",
+    "Delivery_date": "2025-04-09",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0099",
+    "Order_id": "O0099",
+    "Customer_id": "C0099",
+    "Delivery_date": "2025-04-30",
+    "Delivery_status": "配達済み"
+  },
+  {
+    "Delivery_id": "D0100",
+    "Order_id": "O0100",
+    "Customer_id": "C0100",
+    "Delivery_date": "2025-06-26",
+    "Delivery_status": "配達済み"
+  }
+]
