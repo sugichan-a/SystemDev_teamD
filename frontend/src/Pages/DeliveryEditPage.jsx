@@ -1,17 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../App.css';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Breadcrumbs from '../components/breadcrumbs';
 import NavButton from '../components/button/NavButton';
 import { useDeliveryContext } from '../contexts/DeliveryContext';
+import fukaeCustomers from '../components/Customer_Data_Fukae.json';
+import midoriCustomers from '../components/Customer_Data_Midori.json';
+import imazatoCustomers from '../components/Customer_Data_Imazato.json';
 
-const initialCustomer = {
-  name: 'フラワーショップブルーム',
-  person: '村上拓哉',
+const getCustomersByStore = (store) => {
+  if (store === '深江橋店' || store === '深江') return fukaeCustomers;
+  if (store === '緑橋本店' || store === '緑橋') return midoriCustomers;
+  if (store === '今里店' || store === '今里') return imazatoCustomers;
+  return [];
 };
+
+const getInitialCustomer = (customers) => customers.length > 0 ? customers[0] : { name: '', person: '' };
 
 const initialRows = [
   { id: 1, name: '医療情報技師 医学医療編', quantity: 5, price: 2500, code: '987-486705138' },
+  { id: 2, name: '看護師国家試験対策 2025', quantity: 3, price: 3200, code: '978-476531234' },
+  { id: 3, name: '薬剤師のための実践薬学', quantity: 2, price: 4100, code: '978-489234567' },
+  { id: 4, name: '臨床検査技師テキスト', quantity: 4, price: 2800, code: '978-476531235' },
+  { id: 5, name: '医療安全管理入門', quantity: 1, price: 1800, code: '978-476531236' },
 ];
 
 const getToday = () => {
@@ -22,8 +33,10 @@ const getToday = () => {
 const DeliveryEditPage = () => {
   const location = useLocation();
   const deliveryFromState = location.state && location.state.delivery;
-  const customerFromState = deliveryFromState ? { name: deliveryFromState.name } : (location.state && location.state.customer);
-  const [customer, setCustomer] = useState(customerFromState || initialCustomer);
+  const storeName = localStorage.getItem('selectedStore') || '';
+  const customers = getCustomersByStore(storeName);
+  const customerFromState = deliveryFromState ? { name: deliveryFromState.name, person: deliveryFromState.person } : (location.state && location.state.customer);
+  const [customer, setCustomer] = useState(customerFromState || getInitialCustomer(customers));
   const [date, setDate] = useState(deliveryFromState ? (deliveryFromState.date ? deliveryFromState.date.replace(/\//g, '-') : '') : '');
   const [rows, setRows] = useState(deliveryFromState ? (deliveryFromState.rows || initialRows) : initialRows);
   const [selected, setSelected] = useState([]);
@@ -32,7 +45,10 @@ const DeliveryEditPage = () => {
 
   useEffect(() => {
     if (deliveryFromState) {
-      setCustomer({ name: deliveryFromState.name });
+      setCustomer({
+        name: deliveryFromState.name,
+        person: deliveryFromState.person || getInitialCustomer(customers).person,
+      });
       if (deliveryFromState.date) {
         const parts = deliveryFromState.date.split('/');
         if (parts.length === 3) {
@@ -48,10 +64,17 @@ const DeliveryEditPage = () => {
       }
       setRows(deliveryFromState.rows || initialRows);
     }
-  }, [deliveryFromState]);
+  }, [deliveryFromState, customers]);
 
   const handleAddRow = () => {
-    setRows([...rows, { id: Date.now(), name: '', quantity: 1, price: '', code: '' }]);
+    // 商品追加ボタンでDeliverySelectPageに遷移
+    navigate('/deliveries/select', {
+      state: {
+        customer,
+        selectedProductIds: rows.map(r => r.id),
+        from: 'edit', // 戻り先判定用
+      },
+    });
   };
   const handleDeleteRow = (id) => {
     setRows(rows.filter(r => r.id !== id));
@@ -136,7 +159,9 @@ const DeliveryEditPage = () => {
   return (
     <div className="App" style={{ background: '#F9DDE2', minHeight: '100vh' }}>
       <nav className="navbar"><div className="navbar-brand">Midorin</div></nav>
-      <nav className="breadcrumb"><Breadcrumbs /></nav>
+      <nav className="breadcrumb">
+        <Breadcrumbs currentLabel="商品選択" />
+      </nav>
       <div className="main-content column-layout">
         <div className="tab-buttons">
           <NavButton to="/orders">受注管理</NavButton>

@@ -40,7 +40,18 @@ const Breadcrumbs = () => {
   // 先頭は必ずログイン
   breadcrumbItems.push(
     <span key="/login" className="flex items-center gap-1">
-      <Link to="/login" className="text-blue-600 hover:underline">ログイン</Link>
+      <a
+        href="/login"
+        className="text-blue-600 hover:underline"
+        onClick={e => {
+          e.preventDefault();
+          if (window.confirm('ログアウトしますか？')) {
+            localStorage.removeItem('userToken'); // 必要に応じて
+            localStorage.removeItem('selectedStore');
+            window.location.href = '/login';
+          }
+        }}
+      >ログイン</a>
       <ChevronRight className="inline w-4 h-4 text-gray-400" />
     </span>
   );
