@@ -3,10 +3,12 @@ import '../App.css';
 import Breadcrumbs from '../components/breadcrumbs';
 import NavButton from '../components/button/NavButton';
 import { useDeliveryContext } from '../contexts/DeliveryContext';
+import { useNavigate } from 'react-router-dom'; // 追加
 
 const StatsPage = () => {
   const { deliveries } = useDeliveryContext();
   const [nameFilter, setNameFilter] = useState('');
+  const navigate = useNavigate(); // 追加
 
   // 顧客ごとに集計（売上高・リードタイム例）
   const customerStats = deliveries
@@ -75,7 +77,12 @@ const StatsPage = () => {
                   <td style={{ textAlign: 'right', color: '#2d2d4b', fontSize: 15, padding: '10px 8px' }}>{row.sales.toLocaleString()} 円</td>
                   <td style={{ textAlign: 'center', color: '#2d2d4b', fontSize: 15, padding: '10px 8px' }}>{row.leadTime}</td>
                   <td style={{ textAlign: 'center', padding: '10px 8px' }}>
-                    <button style={{ background: '#7ec6ee', color: '#fff', borderRadius: '16px', border: 'none', padding: '4px 12px', fontWeight: 'bold', fontSize: 13, cursor: 'pointer' }}>明細</button>
+                    <button
+                      style={{ background: '#7ec6ee', color: '#fff', borderRadius: '16px', border: 'none', padding: '4px 12px', fontWeight: 'bold', fontSize: 13, cursor: 'pointer' }}
+                      onClick={() => navigate('/customers')}
+                    >
+                      明細
+                    </button>
                   </td>
                 </tr>
               ))}
