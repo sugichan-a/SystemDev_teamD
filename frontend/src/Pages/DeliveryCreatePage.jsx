@@ -1,34 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../App.css';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Breadcrumbs from '../components/breadcrumbs';
 import NavButton from '../components/button/NavButton';
+import fukaeCustomers from '../components/Customer_Data_Fukae.json';
+import midoriCustomers from '../components/Customer_Data_Midori.json';
+import imazatoCustomers from '../components/Customer_Data_Imazato.json';
 import { useDeliveryContext } from '../contexts/DeliveryContext';
 
-const initialCustomer = {
-  name: 'フラワーショップブルーム',
-  person: '村上拓哉',
+const getCustomersByStore = (store) => {
+  if (store === '深江橋店' || store === '深江') return fukaeCustomers;
+  if (store === '緑橋本店' || store === '緑橋') return midoriCustomers;
+  if (store === '今里店' || store === '今里') return imazatoCustomers;
+  return [];
 };
 
-const initialRows = [
-  { id: 1, name: '医療情報技師 医学医療編', quantity: 5, price: 2500, code: '987-486705138' },
-  { id: 2, name: '看護師国家試験対策 2025', quantity: 3, price: 3200, code: '978-476531234' },
-  { id: 3, name: '薬剤師のための実践薬学', quantity: 2, price: 4100, code: '978-489234567' },
-  { id: 4, name: '臨床検査技師テキスト', quantity: 4, price: 2800, code: '978-476531235' },
-  { id: 5, name: '医療安全管理入門', quantity: 1, price: 1800, code: '978-476531236' },
-];
-
-const getToday = () => {
-  const d = new Date();
-  return d.toISOString().slice(0, 10);
-};
+const getInitialCustomer = (customers) => customers.length > 0 ? customers[0] : { name: '', person: '' };
 
 const DeliveryCreatePage = () => {
   const location = useLocation();
   const customerFromState = location.state && location.state.customer;
   const selectedProducts = location.state && location.state.selectedProducts;
-  const [customer] = useState(customerFromState || initialCustomer);
-  const [date, setDate] = useState(getToday());
+  const storeName = localStorage.getItem('selectedStore') || '';
+  const customers = getCustomersByStore(storeName);
+  const [customer] = useState(customerFromState || getInitialCustomer(customers));
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [rows, setRows] = useState(
     selectedProducts && selectedProducts.length > 0
       ? selectedProducts.map(p => ({
@@ -38,7 +34,7 @@ const DeliveryCreatePage = () => {
           price: p.price || '',
           code: p.code || '',
         }))
-      : initialRows
+      : []
   );
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
