@@ -27,6 +27,7 @@ const Login = () => {
     }
     setError('');
     localStorage.setItem('selectedStore', selectedStore);
+    localStorage.setItem('userToken', 'dummy_token'); // 認証トークンを保存
     navigate('/home');
   };
 
