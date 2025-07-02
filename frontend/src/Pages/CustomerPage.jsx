@@ -1,6 +1,7 @@
 import React from "react";
-import { useNavigate } from 'react-router-dom';
-import HeaderNav from '../components/HeaderNav';
+import {useNavigate } from 'react-router-dom';
+import NavButton from '../components/button/NavButton';
+import Breadcrumbs from '../components/breadcrumbs';
 
 const customerInfo = {
   name: "ギャラリーカフェ ループ",
@@ -26,8 +27,21 @@ export default function StatsPage() {
         .stats-th-2 { background: #6b7280; color: #fff; text-align: center; font-weight: bold; border-right: 2px solid #fff; }
         .stats-td-2 { background: #e5e7eb; color: #222; text-align: center; border-right: 2px solid #fff; }
       `}</style>
+
       {/* パンくずリスト */}
-      <HeaderNav />
+      <div className="App">
+      <nav className="navbar"><div className="navbar-brand">Midorin</div></nav>
+      <nav className="breadcrumb"><Breadcrumbs /></nav>
+      </div>
+
+      {/* ナビゲーションボタン（受注・納品・統計） */}
+      <div className="main-content column-layout">
+        <div className="tab-buttons">
+          <NavButton to="/orders">受注管理</NavButton>
+          <NavButton to="/deliveries">納品管理</NavButton>
+          <NavButton to="/stats">統計情報管理</NavButton>
+        </div>
+      </div>
       {/* 情報テーブル */}
       <table className="stats-table">
         <tbody>
@@ -67,6 +81,6 @@ export default function StatsPage() {
           </tr>
         </tbody>
       </table>
-    </div>
+        </div>
   );
 }
