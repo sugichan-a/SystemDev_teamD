@@ -3,6 +3,7 @@ import '../App.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Breadcrumbs from '../components/breadcrumbs';
 import NavButton from '../components/button/NavButton';
+import HeaderNav from '../components/HeaderNav';
 import { useDeliveryContext } from '../contexts/DeliveryContext';
 import fukaeCustomers from '../components/Customer_Data_Fukae.json';
 import midoriCustomers from '../components/Customer_Data_Midori.json';
@@ -158,7 +159,7 @@ const DeliveryEditPage = () => {
 
   return (
     <div className="App" style={{ background: '#F9DDE2', minHeight: '100vh' }}>
-      <nav className="navbar"><div className="navbar-brand">Midorin</div></nav>
+      <HeaderNav />
       <nav className="breadcrumb">
         <Breadcrumbs currentLabel="商品選択" />
       </nav>

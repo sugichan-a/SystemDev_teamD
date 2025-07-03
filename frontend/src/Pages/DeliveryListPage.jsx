@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../App.css';
 import Breadcrumbs from '../components/breadcrumbs';
 import NavButton from '../components/button/NavButton';
+import HeaderNav from '../components/HeaderNav';
 import CustomerSelectModal from '../components/CustomerSelectModal';
 import { useNavigate } from 'react-router-dom';
 import { useDeliveryContext } from '../contexts/DeliveryContext';
@@ -63,7 +64,7 @@ const DeliveryListPage = () => {
  
   return (
     <div className="App">
-      <nav className="navbar"><div className="navbar-brand">Midorin</div></nav>
+      <HeaderNav />
       <nav className="breadcrumb"><Breadcrumbs /></nav>
       <div className="main-content column-layout">
         <div className="tab-buttons">
