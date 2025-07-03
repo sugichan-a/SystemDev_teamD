@@ -2,6 +2,7 @@ import React from "react";
 import {useNavigate } from 'react-router-dom';
 import NavButton from '../components/button/NavButton';
 import Breadcrumbs from '../components/breadcrumbs';
+import HeaderNav from '../components/HeaderNav';
 
 const customerInfo = {
   name: "ギャラリーカフェ ループ",
@@ -30,7 +31,7 @@ export default function StatsPage() {
 
       {/* パンくずリスト */}
       <div className="App">
-      <nav className="navbar"><div className="navbar-brand">Midorin</div></nav>
+      <HeaderNav />
       <nav className="breadcrumb"><Breadcrumbs /></nav>
       </div>
 
