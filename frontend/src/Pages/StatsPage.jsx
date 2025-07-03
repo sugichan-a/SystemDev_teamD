@@ -1,9 +1,11 @@
+
 import React, { useState } from 'react';
 import '../App.css';
 import Breadcrumbs from '../components/breadcrumbs';
 import NavButton from '../components/button/NavButton';
+import HeaderNav from '../components/HeaderNav';
 import { useDeliveryContext } from '../contexts/DeliveryContext';
-import { useNavigate } from 'react-router-dom'; // 追加
+import { useNavigate } from 'react-router-dom';
 
 const StatsPage = () => {
   const { deliveries } = useDeliveryContext();
@@ -41,7 +43,8 @@ const StatsPage = () => {
 
   return (
     <div className="App">
-      <nav className="navbar"><div className="navbar-brand">Midorin</div></nav>
+      {/* ヘッダー（店舗名表示付き） */}
+      <HeaderNav />
       <nav className="breadcrumb"><Breadcrumbs /></nav>
       <div className="main-content column-layout">
         <div className="tab-buttons">
