@@ -3,6 +3,7 @@ import '../App.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Breadcrumbs from '../components/breadcrumbs';
 import NavButton from '../components/button/NavButton';
+import HeaderNav from '../components/HeaderNav';
 import fukaeCustomers from '../components/Customer_Data_Fukae.json';
 import midoriCustomers from '../components/Customer_Data_Midori.json';
 import imazatoCustomers from '../components/Customer_Data_Imazato.json';
@@ -99,7 +100,7 @@ const DeliveryCreatePage = () => {
 
   return (
     <div className="App" style={{ background: '#F9DDE2', minHeight: '100vh' }}>
-      <nav className="navbar"><div className="navbar-brand">Midorin</div></nav>
+      <HeaderNav />
       <nav className="breadcrumb"><Breadcrumbs /></nav>
       <div className="main-content column-layout">
         <div className="tab-buttons">
