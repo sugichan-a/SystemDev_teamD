@@ -1,17 +1,17 @@
+
 import React from 'react';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
 import Breadcrumbs from '../components/breadcrumbs';
+import HeaderNav from '../components/HeaderNav';
 
 const HomePage = () => {
   const navigate = useNavigate();
 
   return (
     <div className="App">
-      {/* 上部の紺色ナビバー */}
-      <nav className="navbar">
-        <div className="navbar-brand">Midorin</div>
-      </nav>
+      {/* ヘッダー（店舗名表示付き） */}
+      <HeaderNav />
 
       {/* 白色のパンくずリスト風ナビバー */}
       <nav className="breadcrumb">

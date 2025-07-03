@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import '../App.css';
 import Breadcrumbs from '../components/breadcrumbs';
@@ -6,6 +5,7 @@ import NavButton from '../components/button/NavButton';
 import HeaderNav from '../components/HeaderNav';
 import { useDeliveryContext } from '../contexts/DeliveryContext';
 import { useNavigate } from 'react-router-dom';
+import LogoutButton from '../components/LogoutButton';
 
 const StatsPage = () => {
   const { deliveries } = useDeliveryContext();
@@ -45,7 +45,17 @@ const StatsPage = () => {
     <div className="App">
       {/* ヘッダー（店舗名表示付き） */}
       <HeaderNav />
-      <nav className="breadcrumb"><Breadcrumbs /></nav>
+      <nav
+        className="breadcrumb"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}
+      >
+        <Breadcrumbs />
+        <LogoutButton />
+      </nav>
       <div className="main-content column-layout">
         <div className="tab-buttons">
           <NavButton to="/orders">受注管理</NavButton>

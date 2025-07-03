@@ -5,6 +5,7 @@ import NavButton from '../components/button/NavButton';
 import CustomerSelectModal from '../components/CustomerSelectModal';
 import { useOrderContext } from '../contexts/OrderContext';
 import { useNavigate } from 'react-router-dom';
+import LogoutButton from '../components/LogoutButton';
 
 const OrderListPage = () => {
   const { orders, removeOrders } = useOrderContext();
@@ -70,7 +71,10 @@ const OrderListPage = () => {
   return (
     <div className="App">
       <nav className="navbar"><div className="navbar-brand">Midorin</div></nav>
-      <nav className="breadcrumb"><Breadcrumbs /></nav>
+      <nav className="breadcrumb" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Breadcrumbs />
+        <LogoutButton />
+      </nav>
 
       <div className="main-content column-layout">
         <div className="tab-buttons">

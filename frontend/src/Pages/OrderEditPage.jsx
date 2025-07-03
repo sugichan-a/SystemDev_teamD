@@ -7,6 +7,7 @@ import fukaeCustomers from '../components/Customer_Data_Fukae.json';
 import midoriCustomers from '../components/Customer_Data_Midori.json';
 import imazatoCustomers from '../components/Customer_Data_Imazato.json';
 import { useOrderContext } from '../contexts/OrderContext';
+import LogoutButton from '../components/LogoutButton';
 
 const getCustomersByStore = (store) => {
   if (store === '深江橋店' || store === '深江') return fukaeCustomers;
@@ -155,7 +156,10 @@ const OrderEditPage = () => {
   return (
     <div className="App" style={{ background: '#F9DDE2', minHeight: '100vh' }}>
       <nav className="navbar"><div className="navbar-brand">Midorin</div></nav>
-      <nav className="breadcrumb"><Breadcrumbs /></nav>
+      <nav className="breadcrumb" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Breadcrumbs />
+        <LogoutButton />
+      </nav>
       <div className="main-content column-layout">
         <div className="tab-buttons">
           <NavButton to="/orders">受注管理</NavButton>
