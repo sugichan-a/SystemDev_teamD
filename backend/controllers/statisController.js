@@ -1,61 +1,31 @@
-import { sequelize } from '../models';
+const db = require('../config/db');
 
-export async function customerStatistics(req, res) {
+// 顧客ごとの平均リードタイムと売上高
+exports.getStats = async (req, res) => {
   try {
-    const query = `
-      SELECT
-        c.id AS "customerId",
-        c.name AS "customerName",
-        COALESCE(SUM(oi.quantity * oi.price), 0) AS "totalSales",
-        AVG(EXTRACT(EPOCH FROM (d.delivery_date - o.order_date))/86400) AS "averageLeadTime"
-      FROM customers c
-      LEFT JOIN orders o ON c.id = o.customer_id
-      LEFT JOIN order_items oi ON o.id = oi.order_id
-      LEFT JOIN deliveries d ON o.id = d.order_id
-      GROUP BY c.id, c.name
-      ORDER BY "totalSales" DESC
-      LIMIT 100
-    `;
+    const leadTimeResult = await db.query(`
+      SELECT c.name AS customer_name, ROUND(AVG(delivery_date - order_date)) AS avg_lead_time
+      FROM orders o
+      JOIN customers c ON o.customer_id = c.id
+      WHERE o.status = '納品済'
+      GROUP BY c.name
+    `);
 
-    const [results] = await sequelize.query(query);
-    res.json(results);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching statistics' });
-  }
-}
+    const salesResult = await db.query(`
+      SELECT c.name AS customer_name, SUM(i.price * i.quantity) AS total_sales
+      FROM orders o
+      JOIN customers c ON o.customer_id = c.id
+      JOIN order_items i ON o.id = i.order_id
+      WHERE o.status = '納品済'
+      GROUP BY c.name
+    `);
 
-export async function customerDetail(req, res) {
-  try {
-    const { id } = req.params;
-
-    const query = `
-      SELECT
-        c.id AS "customerId",
-        c.name AS "customerName",
-        COALESCE(SUM(oi.quantity * oi.price), 0) AS "totalSales",
-        AVG(EXTRACT(EPOCH FROM (d.delivery_date - o.order_date))/86400) AS "averageLeadTime",
-        c.contact_person AS "contactPerson",
-        c.phone,
-        c.address,
-        c.delivery_conditions AS "deliveryConditions",
-        c.registered_at AS "registeredAt",
-        c.remarks
-      FROM customers c
-      LEFT JOIN orders o ON c.id = o.customer_id
-      LEFT JOIN order_items oi ON o.id = oi.order_id
-      LEFT JOIN deliveries d ON o.id = d.order_id
-      WHERE c.id = :id
-      GROUP BY c.id
-    `;
-
-    const [results] = await sequelize.query(query, {
-      replacements: { id },
+    res.json({
+      avgLeadTimes: leadTimeResult.rows,
+      totalSales: salesResult.rows
     });
-
-    if (results.length === 0) return res.status(404).json({ message: 'Customer not found' });
-
-    res.json(results[0]);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching customer detail' });
+  } catch (err) {
+    console.error('Error fetching stats:', err);
+    res.status(500).json({ error: 'DB error' });
   }
-}
+};

@@ -1,32 +1,27 @@
-import { User } from '../models';
-import { hash } from 'bcrypt';
+const db = require('../config/db');
 
-export async function listUsers(req, res) {
+// 全ユーザーを取得（例: 管理者・店舗ユーザー）
+exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.findAll({ attributes: ['id', 'username', 'role', 'store_id', 'created_at'] });
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching users' });
+    const result = await db.query('SELECT * FROM users ORDER BY id DESC');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    res.status(500).json({ error: 'DB error' });
   }
-}
+};
 
-export async function createUser(req, res) {
+// 新規ユーザーを作成
+exports.createUser = async (req, res) => {
+  const { username, password, role } = req.body; // role = 'admin' | 'store'
   try {
-    const { username, password, role, store_id } = req.body;
-    const password_hash = await hash(password, 10);
-    const newUser = await User.create({ username, password_hash, role, store_id });
-    res.status(201).json(newUser);
-  } catch (error) {
-    res.status(500).json({ message: 'Error creating user' });
+    const result = await db.query(
+      'INSERT INTO users (username, password, role) VALUES ($1, $2, $3) RETURNING *',
+      [username, password, role]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Error creating user:', err);
+    res.status(500).json({ error: 'DB error' });
   }
-}
-
-export async function deleteUser(req, res) {
-  try {
-    const { id } = req.params;
-    await User.destroy({ where: { id } });
-    res.json({ message: 'User deleted' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error deleting user' });
-  }
-}
+};

@@ -1,33 +1,27 @@
-import { Customer } from '../models';
-import { Op } from 'sequelize';
+const db = require('../config/db');
 
-export async function listCustomers(req, res) {
+// 全顧客を取得
+exports.getAllCustomers = async (req, res) => {
   try {
-    const { name } = req.query;
-    const where = {};
-    if (name) where.name = { [Op.iLike]: `%${name}%` };
-    const customers = await Customer.findAll({ where });
-    res.json(customers);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching customers' });
+    const result = await db.query('SELECT * FROM customers ORDER BY id DESC');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching customers:', err);
+    res.status(500).json({ error: 'DB error' });
   }
-}
+};
 
-export async function createCustomer(req, res) {
+// 新規顧客を追加
+exports.createCustomer = async (req, res) => {
+  const { name } = req.body;
   try {
-    const customer = await Customer.create(req.body);
-    res.status(201).json(customer);
-  } catch (error) {
-    res.status(500).json({ message: 'Error creating customer' });
+    const result = await db.query(
+      'INSERT INTO customers (name) VALUES ($1) RETURNING *',
+      [name]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Error creating customer:', err);
+    res.status(500).json({ error: 'DB error' });
   }
-}
-
-export async function deleteCustomer(req, res) {
-  try {
-    const { id } = req.params;
-    await Customer.destroy({ where: { id } });
-    res.json({ message: 'Customer deleted' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error deleting customer' });
-  }
-}
+};
