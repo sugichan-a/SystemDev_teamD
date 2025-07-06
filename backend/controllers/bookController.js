@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const db = require('../db');
 
 // 全書籍を取得
 exports.getAllBooks = async (req, res) => {

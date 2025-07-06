@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const db = require('../db');
 
 // 顧客ごとの平均リードタイムと売上高
 exports.getStats = async (req, res) => {

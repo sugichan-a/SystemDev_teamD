@@ -5,10 +5,17 @@ const basename = path.basename(__filename);
 require('dotenv').config();
 
 const db = {};
-const sequelize = new Sequelize(process.env.DB_CONNECTION_STRING, {
-  dialect: 'postgres',
-  logging: false,
-});
+const sequelize = new Sequelize(
+  process.env.PGDATABASE,
+  process.env.PGUSER,
+  process.env.PGPASSWORD,
+  {
+    host: process.env.PGHOST,
+    port: process.env.PGPORT,
+    dialect: 'postgres',
+    logging: false,
+  }
+);
 
 fs
   .readdirSync(__dirname)

@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const db = require('../db');
 
 // 全納品データを取得（例）
 exports.getAllDeliveries = async (req, res) => {

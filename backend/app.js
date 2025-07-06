@@ -1,21 +1,21 @@
-import express, { json } from 'express';
-import cors from 'cors';
+const express = require('express');
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
 
 // ミドルウェア
 app.use(cors());
-app.use(json());
+app.use(express.json());
 
 // ルート
-import authRoutes from './routes/authRoutes';
-import bookRoutes from './routes/bookRoutes';
-import customerRoutes from './routes/customerRoutes';
-import deliveryRoutes from './routes/deliveryRoutes';
-import orderRoutes from './routes/orderRoutes';
-import statsRoutes from './routes/statsRoutes';
-import userRoutes from './routes/userRoutes';
+const authRoutes = require('./routes/authRoutes');
+const bookRoutes = require('./routes/bookRoutes');
+const customerRoutes = require('./routes/customerRoutes');
+const deliveryRoutes = require('./routes/deliveryRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const statsRoutes = require('./routes/statisRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/books', bookRoutes);

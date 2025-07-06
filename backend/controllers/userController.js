@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const db = require('../db');
 
 // 全ユーザーを取得（例: 管理者・店舗ユーザー）
 exports.getAllUsers = async (req, res) => {

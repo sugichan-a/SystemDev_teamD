@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const db = require('../db');
 
 // 全注文を取得
 exports.getAllOrders = async (req, res) => {

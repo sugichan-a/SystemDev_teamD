@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const statsController = require('../controllers/statsController');
+const statisController = require('../controllers/statisController');
 
-router.get('/', statsController.getStats);
+router.get('/', statisController.getStats);
 
 module.exports = router;
