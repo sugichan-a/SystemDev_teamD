@@ -1,23 +1,43 @@
-import express from 'express';
-import orders from './api/orders.js';
-import deliveries from './api/deliveries.js';
-import stats from './api/stats.js';
-import customers from './api/customers.js';
+import express, { json } from 'express';
+import cors from 'cors';
+require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 4000;
 
-app.use(express.json());
+// ミドルウェア
+app.use(cors());
+app.use(json());
 
-app.use('/api/orders', orders);
-app.use('/api/deliveries', deliveries);
-app.use('/api/stats', stats);
-app.use('/api/customers', customers);
+// ルート
+import authRoutes from './routes/authRoutes';
+import bookRoutes from './routes/bookRoutes';
+import customerRoutes from './routes/customerRoutes';
+import deliveryRoutes from './routes/deliveryRoutes';
+import orderRoutes from './routes/orderRoutes';
+import statsRoutes from './routes/statsRoutes';
+import userRoutes from './routes/userRoutes';
 
-app.get('/', (req, res) => {
-  res.send('API is running');
+app.use('/api/auth', authRoutes);
+app.use('/api/books', bookRoutes);
+app.use('/api/customers', customerRoutes);
+app.use('/api/deliveries', deliveryRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/stats', statsRoutes);
+app.use('/api/users', userRoutes);
+
+// 404ハンドリング
+app.use((req, res, next) => {
+  res.status(404).json({ error: 'Not Found' });
 });
 
+// エラーハンドリング
+app.use((err, req, res, next) => {
+  console.error('Internal Server Error:', err);
+  res.status(500).json({ error: 'Internal Server Error' });
+});
+
+// サーバー起動
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
