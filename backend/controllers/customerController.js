@@ -1,6 +1,7 @@
-const db = require('../config/db');
+const db = require('../db');
+const parseCsvFile = require('../utils/csvParser');
 
-// 全顧客を取得
+// 全顧客取得
 exports.getAllCustomers = async (req, res) => {
   try {
     const result = await db.query('SELECT * FROM customers ORDER BY id DESC');
@@ -11,7 +12,7 @@ exports.getAllCustomers = async (req, res) => {
   }
 };
 
-// 新規顧客を追加
+// 新規顧客追加
 exports.createCustomer = async (req, res) => {
   const { name } = req.body;
   try {
@@ -23,5 +24,25 @@ exports.createCustomer = async (req, res) => {
   } catch (err) {
     console.error('Error creating customer:', err);
     res.status(500).json({ error: 'DB error' });
+  }
+};
+
+// CSVアップロードで顧客取り込み
+exports.uploadCustomers = async (req, res) => {
+  try {
+    const filePath = req.file.path;   // multerで保存されたファイルのパス
+    const customers = await parseCsvFile(filePath);
+
+    for (const customer of customers) {
+      await db.query(
+        'INSERT INTO customers (name, email) VALUES ($1, $2)',
+        [customer.name, customer.email]
+      );
+    }
+
+    res.json({ message: 'Customers uploaded successfully', count: customers.length });
+  } catch (err) {
+    console.error('Error parsing CSV:', err);
+    res.status(500).json({ error: 'Failed to upload customers' });
   }
 };
