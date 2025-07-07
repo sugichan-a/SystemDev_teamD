@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import '../App.css';
 import Breadcrumbs from '../components/breadcrumbs';
@@ -6,12 +5,12 @@ import NavButton from '../components/button/NavButton';
 import HeaderNav from '../components/HeaderNav';
 import { useDeliveryContext } from '../contexts/DeliveryContext';
 import { useNavigate } from 'react-router-dom';
+import LogoutButton from '../components/LogoutButton';
 
 const StatsPage = () => {
   const { deliveries } = useDeliveryContext();
   const [nameFilter, setNameFilter] = useState('');
   const navigate = useNavigate(); // 追加
-
   // 顧客ごとに集計（売上高・リードタイム例）
   const customerStats = deliveries
     .filter(item => !nameFilter || item.name.includes(nameFilter))
@@ -32,7 +31,6 @@ const StatsPage = () => {
       }
       return acc;
     }, {});
-
   // テーブル用データ
   const tableData = Object.entries(customerStats).map(([name, stat]) => ({
     name,
@@ -40,12 +38,20 @@ const StatsPage = () => {
     leadTime: stat.leadTimes.length ? (stat.leadTimes.reduce((a, b) => a + b, 0) / stat.leadTimes.length).toFixed(1) + '日' : '-',
     details: stat.details,
   }));
-
   return (
     <div className="App">
       {/* ヘッダー（店舗名表示付き） */}
       <HeaderNav />
-      <nav className="breadcrumb"><Breadcrumbs /></nav>
+      <nav
+        className="breadcrumb"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}
+      >
+        <Breadcrumbs />
+      </nav>
       <div className="main-content column-layout">
         <div className="tab-buttons">
           <NavButton to="/orders">受注管理</NavButton>
@@ -96,5 +102,4 @@ const StatsPage = () => {
     </div>
   );
 };
-
 export default StatsPage;
