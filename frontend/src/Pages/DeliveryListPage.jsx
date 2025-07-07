@@ -50,16 +50,16 @@ const DeliveryListPage = () => {
   const filteredData = deliveries
     .filter(item => {
       if (nameFilter && !item.name.includes(nameFilter)) return false;
-      if (dateFrom && item.date < dateFrom) return false;
-      if (dateTo && item.date > dateTo) return false;
-      const active = Object.entries(statusFilters).filter(([, v]) => v).map(([k]) => k);
+      // 日付比較をDate型で厳密に
+      if (dateFrom && new Date(item.date) < new Date(dateFrom)) return false;
+      if (dateTo && new Date(item.date) > new Date(dateTo)) return false;
+      const active = Object.entries(statusFilters).filter(([,v]) => v).map(([k]) => k);
       if (active.length && !active.includes(item.status)) return false;
       return true;
     })
-    .sort((a, b) =>
-      sortOrder === 'asc'
-        ? new Date(a.date) - new Date(b.date)
-        : new Date(b.date) - new Date(a.date)
+    .sort((a, b) => sortOrder === 'asc'
+      ? new Date(a.date) - new Date(b.date)
+      : new Date(b.date) - new Date(a.date)
     );
  
   return (
