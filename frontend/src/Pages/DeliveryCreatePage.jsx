@@ -25,14 +25,15 @@ const DeliveryCreatePage = () => {
   const customers = getCustomersByStore(storeName);
   const [customer] = useState(customerFromState || getInitialCustomer(customers));
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  // DeliverySelectPageから渡されたselectedProductsの形式に対応
   const [rows, setRows] = useState(
     selectedProducts && selectedProducts.length > 0
       ? selectedProducts.map(p => ({
           id: p.id,
-          name: p.name,
+          name: p.book_title || p.name || '',
           quantity: p.quantity || 1,
-          price: p.price || '',
-          code: p.code || '',
+          price: p.book_unitprice || p.price || '',
+          code: p.book_note || p.code || '',
         }))
       : []
   );
@@ -136,16 +137,24 @@ const DeliveryCreatePage = () => {
           <button onClick={handleDeleteSelected} style={{ background: '#E57D94', color: '#fff', border: 'none', borderRadius: 22, padding: '8px 32px', fontWeight: 'bold', fontSize: 16, marginLeft: 0, transition: 'background 0.2s' }} disabled={selected.length === 0}>選んだ項目を削除</button>
           <button onClick={handleAddRow} style={{ background: '#E57D94', color: '#fff', border: 'none', borderRadius: 22, padding: '8px 32px', fontWeight: 'bold', fontSize: 16, marginRight: 0, transition: 'background 0.2s' }}>商品を追加</button>
         </div>
-        <div style={{ background: '#fff', borderRadius: 14, boxShadow: '0 2px 8px #e57d9410', maxWidth: 900, margin: '0 auto', overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0 }}>
+        <div style={{ background: '#fff', borderRadius: 14, boxShadow: '0 2px 8px #e57d9410', maxWidth: '1400px', minWidth: '1100px', margin: '0 auto', overflow: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0, tableLayout: 'fixed' }}>
+            <colgroup>
+              <col style={{ width: '80px' }} />
+              <col style={{ width: '40%' }} />
+              <col style={{ width: '13%' }} />
+              <col style={{ width: '15%' }} />
+              <col style={{ width: '22%' }} />
+              <col style={{ width: '80px' }} />
+            </colgroup>
             <thead style={{ background: '#F3F3F6' }}>
               <tr>
-                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 60 }}>選択</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center' }}>選択</th>
                 <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center' }}>商品名</th>
-                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 80 }}>数量</th>
-                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 100 }}>単価</th>
-                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 120 }}>備考</th>
-                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center', width: 80 }}>削除</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center' }}>数量</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center' }}>単価</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center' }}>備考</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: '#888', fontSize: 15, textAlign: 'center' }}>削除</th>
               </tr>
             </thead>
             <tbody>
@@ -154,7 +163,7 @@ const DeliveryCreatePage = () => {
                   <td style={{ textAlign: 'center' }}>
                     <input type="checkbox" checked={selected.includes(row.id)} onChange={() => handleSelectRow(row.id)} />
                   </td>
-                  <td style={{ textAlign: 'left', fontWeight: 600, color: '#2d2d4b', fontSize: 15 }}>
+                  <td style={{ textAlign: 'left', fontWeight: 600, color: '#2d2d4b', fontSize: 15, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     <input type="text" value={row.name} onChange={e => handleChange(row.id, 'name', e.target.value)} style={{ border: 'none', background: 'transparent', width: '100%', fontWeight: 600, color: '#2d2d4b', fontSize: 15 }} />
                   </td>
                   <td style={{ textAlign: 'center', fontWeight: 500 }}>
@@ -163,7 +172,7 @@ const DeliveryCreatePage = () => {
                   <td style={{ textAlign: 'center', fontWeight: 500 }}>
                     {row.price}
                   </td>
-                  <td style={{ textAlign: 'center', color: '#2d2d4b', fontSize: 15 }}>
+                  <td style={{ textAlign: 'center', color: '#2d2d4b', fontSize: 15, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     <input type="text" value={row.code} onChange={e => handleChange(row.id, 'code', e.target.value)} style={{ border: 'none', background: 'transparent', width: 110, fontSize: 15 }} />
                   </td>
                   <td style={{ textAlign: 'center' }}>

@@ -139,7 +139,7 @@ const DeliveryListPage = () => {
           onSelect={customer => {
             setSelectedCustomer(customer);
             setShowModal(false);
-            navigate('/deliveries/create', { state: { customer } }); // ✅ 正しく1箇所だけに修正
+            navigate('/deliveries/select/create', { state: { customer } }); // ✅ 正しく1箇所だけに修正
           }}
         />
  
@@ -180,7 +180,7 @@ const DeliveryListPage = () => {
                         style={{ background: '#e57d94', color: '#fff', borderRadius: '16px', border: 'none', padding: '4px 12px', minWidth: 36, fontWeight: 'bold', fontSize: 13, cursor: 'pointer', transition: 'background 0.2s' }}
                         onMouseOver={e => e.currentTarget.style.background = '#c95d7a'}
                         onMouseOut={e => e.currentTarget.style.background = '#e57d94'}
-                        onClick={() => navigate('/deliveries/edit', { state: { delivery: item, customer: { name: item.name }, date: item.date } })} // ✅ 1つだけに修正
+                        onClick={() => navigate('/deliveries/select/edit', { state: { delivery: item, customer: { name: item.name }, date: item.date } })} // ✅ 1つだけに修正
                       >
                         編集
                       </button>

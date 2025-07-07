@@ -14,14 +14,16 @@ const Breadcrumbs = () => {
     create: '注文書作成',
     edit: '注文書編集',
     deliveries: '納品管理',
+    select: '商品選択',
     stats: '統計情報管理',
     customers: '顧客情報',
   };
 
   // --- 追加: 特定パスの特別表示名 ---
   const specialPathMap = {
-    'deliveries/create': '納品書作成',
-    'deliveries/edit': '納品書編集',
+    'deliveries/select/create': '納品書作成',
+    'deliveries/select/edit': '納品書編集',
+    'deliveries/select': '商品選択',
   };
   const joinedPath = paths.join('/');
 
