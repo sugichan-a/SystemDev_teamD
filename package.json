@@ -1,0 +1,26 @@
+{
+  "name": "systemdev_teamd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm start",
+    "client": "cd frontend && npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sugichan-a/SystemDev_teamD.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sugichan-a/SystemDev_teamD/issues"
+  },
+  "homepage": "https://github.com/sugichan-a/SystemDev_teamD#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}
