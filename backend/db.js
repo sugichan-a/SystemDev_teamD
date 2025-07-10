@@ -19,3 +19,15 @@ pool.on('error', (err) => {
 });
 
 module.exports = pool;
+
+// ======== 接続テスト用スクリプト ========
+//(async () => {
+//  try {
+//    const res = await pool.query('SELECT NOW()');
+//    console.log('Test query successful, current time:', res.rows[0].now);
+//  } catch (err) {
+//    console.error('Test query failed:', err);
+//  } finally {
+//    await pool.end(); // 接続を閉じる
+//  }
+//})();
